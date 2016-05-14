@@ -1,0 +1,423 @@
+{% extends 'help/main.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block base_body %}
+
+{% block content %}
+    
+    <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom" id="main">
+<a name="top" style="display:hidden;"></a>
+
+<nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand" href="/"><img src='{% static "home/images/logo.png" %}' style = "max-height:90%; margin-bottom:2px" /></a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                
+                    <li>
+                        <a class="nav_text" href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a class="nav_text" href="/help/">Help</a>
+                    </li>
+                </ul>
+                
+                <ul class="uk-navbar-nav uk-hidden-small uk-navbar-flip">
+                    <li>
+                        <a href="/search/">Search</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/full/">Timeline</a>
+                    </li>
+                    <li>
+                        <a href="/data/">Data</a>
+                    </li>
+
+                    
+                                        <li>
+                        <div class="uk-navbar-content uk-hidden-small">
+                                        <form class="uk-form uk-margin-remove uk-display-inline-block fontfix" action ="/search/" method = 'get'>
+                                            <input type="text" class = "navsearchtext" name = 'q' placeholder="Search">
+                                            <input id="searchsubmit" class = "navsearchsubmit uk-button uk-button-primary" type="submit" value="Quick Search">
+                                        </form>
+                                        
+                                    </div>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small uk-float-right" data-uk-offcanvas></a>
+            </nav>
+            
+            
+
+       
+                   <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-1-1">
+                    <h1 class="uk-heading-large">Help</h1>
+                </div>
+            </div>
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-3-4">
+
+                    <h2 id="search">Search Options</h2>
+
+                    <p>Use the main <a href="/search/">Search</a> page, or the Quick Search at the top of any Lipad site page, to perform a basic search of the complete Canadian House of Commons Hansard.</p>
+                    <p>You can customize your query with a few simple operators:</p>
+
+                    <div class="uk-width-1-1">
+                        <table class="uk-table uk-table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Operator</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>-</code></td>
+                                    <td>Use to represent NOT. For example, <code>crime -internet</code> will search for references to "crime" but not "internet".</td>
+                                </tr>
+                                <tr>
+                                    <td><code>" "</code></td>
+                                    <td>Complete phrases can be searched using quotation marks. For example, <code>"stephen harper"</code> will return all speeches by Stephen Harper as well as speeches containing this phrase.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h3>Advanced Search Options</h3>
+                    
+                    <p>Additional search options can be found below the search box on the main <a href="/search/">Search</a> page.  <strong>All of these fields are optional.</strong></p>
+                    
+                                                            <div class="uk-width-1-1">
+                        <img class = "uk-align-center uk-margin" src="/static/help/images/searchbox.png" alt="Diagram of search interface.">
+                    </div>
+
+
+                    <div class="uk-width-1-1">
+                        <table class="uk-table uk-table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Search Option</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Politician</td>
+                                    <td>Filter text search results by politician name.  If you'd like an exact match (not case sensitive), select the Exact match checkbox.</td>
+                                </tr>
+                                <tr>
+                                    <td>Party</td>
+                                    <td>Filter text search results by party.  If you'd like an exact match (not case sensitive), select the Exact match checkbox.</td>
+                                </tr>
+                                    <tr>
+                                    <td>Date Range</td>
+                                    <td>Select a start date, end date, or both to restrict search results by date. <br><strong>Day, month, and year must all be selected.</strong></td>
+                                </tr>
+                                                                    <tr>
+                                    <td>Sort By Date</td>
+                                    <td>Search results are normally sorted by relevance; select this checkbox to sort by date.</em></td>
+                                </tr>
+                                                                                                    <tr>
+                                    <td>Show Oldest Results First</td>
+                                    <td>If sorting by date, select this box to sort results from oldest to newest instead of newest to oldest (default).</em></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p><span class="uk-badge">NOTE</span> Remember to select a complete day, month, and year when filtering by date range.</p>
+
+                    <hr class="uk-grid-divider">
+
+                    <h2 id="results">Search Results</h2>
+
+                    <p>Each search result shows complete date and speaker information along with the first few sentences of each speech; longer speeches are truncated.</p>
+                    <p>To see the complete text of a speech, and/or view a speech in its original context, click the <code>Full View</code> button on the bottom right of the speech panel.</p>
+
+                        <img class = "uk-align-center uk-margin" src="/static/help/images/searchresult.png" alt="Diagram of a sample search result.">
+
+                                        <div class="uk-width-1-1">
+                        <table class="uk-table uk-table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Results Field</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Date</td>
+                                    <td>Displays the date when this speech occured in the House.</td>
+                                </tr>
+                                <tr>
+                                    <td>Portrait</td>
+                                    <td>Portrait of the person who gave this speech.  See <a href="#legend">Portrait Legend</a> for more information about portraits for special or unknown speakers.</td>
+                                </tr>
+                                    <tr>
+                                    <td>Name (Title)</td>
+                                    <td>Each politician is identified, when possible, by their full name. Depending on the age of the file, we may also have information on their position in the House of Commons, which is listed following their name in parentheses. </strong></td>
+                                </tr>
+                                                                    <tr>
+                                    <td>Party</td>
+                                    <td>The party affiliation of a politician is listed in full below their name. For easy reference, a party abbreviation and party colour is located in the top right corner of each speech record.</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Member Biography</td>
+                                    <td>Click to visit this politician's full record at <a href="http://www.lop.parl.gc.ca/ParlInfo/default.aspx?Menu=Home">PARLINFO</a>, the official database of the Parliament of Canada.</em></td>
+                                </tr>
+                                    <tr>
+                                    <td>Party Information</td>
+                                    <td>Click to view more details about this politician's party affiliation at Wikipedia.</em></td>
+                                </tr>
+                                <tr>
+                                    <td>Formal Address</td>
+                                    <td>Located just above the text of each speech. Older records from Hansard may contain additional information identifying who gave this speech. In cases where our software has made errors identifying a politician, this shortened form of address may be helpful to a researcher.</em></td>
+                                </tr>
+                                                                <tr>
+                                    <td>Speech Text</td>
+                                    <td>The text of the speech containing the search query, truncated to a standard length for display purposes.</td>
+                                </tr>
+                                                                                                <tr>
+                                    <td>Topic and Subtopic</td>
+                                    <td>If this speech was identified as part of a topic or subtopic block in the Hansard proceedings, this information is displayed below the speech text in each search result.</td>
+                                </tr>
+                             <tr>
+                                    <td>Full View</td>
+                                    <td>Click to see the full speech of a search result in context.</td>
+                                </tr>
+                                
+                                                             <tr>
+                                    <td>Save Speech/Report an Error</td>
+                                    <td>In later versions of the site, we'll provide researchers with additional tools for saving and exporting search results, and reporting text recognition errors in the Hansard records so the data can be improved.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <hr class="uk-grid-divider">
+
+                    <h2 id="legend">Portrait Legend</h2>
+
+                    <p>We've matched nearly every speech in Hansard to a politician with a portrait, but when one isn't available, one of the following portraits will be displayed.</p>
+
+                    <div class="uk-grid uk-grid-match" data-uk-grid-match="{target:'.uk-panel'}">
+                        <div class="uk-width-medium-1-3">
+                            <div class="uk-panel uk-panel-box uk-text-center">
+                                <h3 class="uk-panel-title">No Portrait Available</h3>
+                                <img class = "uk-align-center uk-margin-bottom" src="/static/help/images/notavailable.png" alt="No portrait available.">
+                                
+                                We've identified the politician, but PARLINFO has no record of an existing portrait.
+                            </div>
+                        </div>
+                        <div class="uk-width-medium-1-3">
+                             <div class="uk-panel uk-panel-box uk-text-center">
+                                <h3 class="uk-panel-title">Interjection</h3>
+                                <img class = "uk-align-center uk-margin-bottom" src="/static/help/images/intervention.png" alt="Interjection.">
+                                This speech was out of turn in the House and was recorded as an interjection; it may not have an identified speaker.
+                            </div>
+                        </div>
+                        <div class="uk-width-medium-1-3">
+                             <div class="uk-panel uk-panel-box uk-text-center">
+                                <h3 class="uk-panel-title">Unknown</h3>
+                                <img class = "uk-align-center uk-margin-bottom" src="/static/help/images/unknown.png" alt="Unknown.">
+                                We weren't able to match this content with a speaker due to a text recognition error. Unfortunately, due to the age of our source documents, the oldest speeches we have in our records still contain computer errors.
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="uk-grid-divider">
+
+                    <h2 id="timeline">Timeline Navigation</h2>
+
+                    <p>The Timeline allows you to explore the Canadian Hansard by decade, year, month, and day.</p>
+                    
+                    <img class = "uk-align-center" src="/static/help/images/browsetop.png" alt="Date browse view sample.">
+                    
+                    <div class="uk-width-1-1">
+                    <ul><li>
+                    At the top of each page, your current year, month, and day (as applicable) are displayed.<br>For example, to return to the year 2012, click <code>2012</code> to view a list of months Parliament was in session in that year.</li>
+                    <li>Your current time selection is shown in large text.<br>Use the arrows to the left and right to proceed forward and backward to the next set of records.</li>
+                    <li>Click "Export to CSV" to download this day's proceedings in a UTF-8 CSV file.</li></ul>
+                    <p><span class="uk-badge">NOTE</span> Older versions of Excel may be unable to open this file because of French language characters. We recommend using <a href="https://www.libreoffice.org/">LibreOffice</a> or <a href="https://www.openoffice.org/">OpenOffice</a> to view exported CSV files.</p>
+                    </div>
+
+                    <hr class="uk-grid-divider">
+
+                    <h2 id="daily">Daily View</h2>
+
+                    <ul><li>Selecting a day will display the entire proceedings of the House of Commons on that particular date.</li>
+                        <li>In Daily View, speeches are displayed at their full length, together with all the other information available in search results.</li></ul>
+                    
+                    <img class = "uk-align-center" src="/static/help/images/stagedirection.png" alt="Sample of daily view showing topics and stage directions.">
+                    
+<ul><li>Text in <em>italics</em> are "stage directions".<br>They typically note normal procedures such as the daily opening and closing of the House.</li>
+    <li>Text in <strong><em>bold italic</strong></em> shows topics and subtopics in the House. <br>Subtopics are represented by a smaller font.</li></ul>
+
+                                    <hr class="uk-grid-divider">
+
+                    <h2 id="bugs">Bugs and Upcoming Features</h2>
+                    
+                    <p>We're continuously discovering and fixing bugs in the Lipad dataset, and on our website.</p>
+                    
+                    <p>Here is a current list of issues we know about and are working on. If you encounter a problem that's not on this list, please <a href="/contact/">let us know</a>!</p>
+
+                    <div class="uk-width-1-1">
+                        <table class="uk-table uk-table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Bug</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1906-1908 Data</td>
+                                    <td>At least two volumes of Hansard between 1906 and 1908 were not properly OCRd and are missing from the dataset. Source PDFs will be reprocessed and rolled into the Lipad dataset as soon as possible (Summer 2016).</td>
+                                </tr>
+                                <tr>
+                                    <td>Indexes</td>
+                                    <td>Substantial chunks of Hansard index volumes present in early records have not been automatically recognised as index volumes and culled.</td>
+                                </tr>
+                                    <tr>
+                                    <td>Title Misattribution</td>
+                                    <td>In early Hansards, speakers identified by their title (eg. Minister of the Interior) rather than name cannot yet be linked to their proper politician profiles.</strong></td>
+                                </tr>
+                                                                                                                                       <tr>
+                                    <td>Riding and Politician Data</td>
+                                    <td>Electoral district information, and detailed politician information, is available to researchers in <a href="/data/">supplementary XML data files</a> but is not yet integrated into the website and search interface.</td>
+                                </tr>
+                                                                    <tr>
+                                    <td>Report an Error</td>
+                                    <td>We plan to implement a system for manual correction of OCR errors through an automated "Report an Error" system, whereby any user can submit changes and edits to problematic text records that will be verified by Lipad staff. Coming soon!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                    <hr class="uk-grid-divider">
+                    
+
+                    <h2 id="sitemap">Site Map</h2>
+                    
+<div class="uk-grid uk-margin-large-top" data-uk-grid-margin="">
+                <div class="uk-width-medium-1-3 uk-row-first">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-search uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <a href="/search/"><h2 class="uk-h3">Search</h2></a>
+                            <p>Search the Canadian House of Commons Hansard from 1901-present.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-width-medium-1-3">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-calendar uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <a href="/full/"><h2 class="uk-h3">Timeline</h2></a>
+                            <p>Explore the Canadian Hansard by date.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-width-medium-1-3">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-archive uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <a href="/data/"><h2 class="uk-h3">Data</h2></a>
+                            <p>Download the Lipad dataset and access supplementary data about Canada's parliament.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+                <div class="uk-grid" data-uk-grid-margin="">
+                <div class="uk-width-medium-1-3 uk-row-first">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-info uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <a href="/#about"><h2 class="uk-h3">About</h2></a>
+                            <p>About the Lipad Group at the University of Toronto.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-width-medium-1-3">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-comments uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <a href="/blog/"><h2 class="uk-h3">Blog</h2></a>
+                            <p>News, analysis, and features from the Lipad team.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-width-medium-1-3">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-briefcase uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <a href="/#contact"><h2 class="uk-h3">Contact</h2></a>
+                            <p>Get in touch with us!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+                        <div class="uk-grid" data-uk-grid-margin="">
+
+                <div class="uk-width-medium-1-3">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-question uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <a href="#top"><h2 class="uk-h3">Help</h2></a>
+                            <p>Return to the top of this page.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+                </div>
+                <div class="uk-width-medium-1-4">
+
+                    <div class="uk-panel uk-panel-box" data-uk-sticky="{top:35, boundary:true}">
+                        <ul class="uk-nav uk-nav-side" data-uk-scrollspy-nav="{closest:'li', smoothscroll:true}">
+                            <li class="uk-nav-header">Searching</li>
+                            <li class="uk-active"><a href="#search">Search Options</a></li>
+                            <li class=""><a href="#results">Search Results</a></li>
+                            <li class=""><a href="#legend">Portrait Legend</a></li>
+                            <li class="uk-nav-header">Browsing</li>
+                            <li class=""><a href="#timeline">Timeline Navigation</a></li>
+                            <li class=""><a href="#daily">Daily View</a></li>
+                            <li class="uk-nav-divider"></li>
+                            <li class=""><a href="#bugs">Bugs and Upcoming Features</a></li>
+                            <li class="uk-nav-divider"></li>
+                            <li class=""><a href="#sitemap"><i class="uk-icon-info-circle uk-margin-small-right"></i>Site Map</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+  
+
+{% endblock content %}
+{% endblock base_body %}

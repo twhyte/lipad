@@ -1,0 +1,150 @@
+{% extends 'data/main.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block base_body %}
+
+{% block content %}
+    
+    <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom" id="main">
+<a name="top" style="display:hidden;"></a>
+
+<nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand" href="/"><img src='{% static "home/images/logo.png" %}' style = "max-height:90%; margin-bottom:2px" /></a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                
+                    <li>
+                        <a class="nav_text" href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a class="nav_text" href="/help/">Help</a>
+                    </li>
+                </ul>
+                
+                <ul class="uk-navbar-nav uk-hidden-small uk-navbar-flip">
+                    <li>
+                        <a href="/search/">Search</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/full/">Timeline</a>
+                    </li>
+                    <li>
+                        <a href="/data/">Data</a>
+                    </li>
+
+                    
+                                        <li>
+                        <div class="uk-navbar-content uk-hidden-small">
+                                        <form class="uk-form uk-margin-remove uk-display-inline-block fontfix" action ="/search/" method = 'get'>
+                                            <input type="text" class = "navsearchtext" name = 'q' placeholder="Search">
+                                            <input id="searchsubmit" class = "navsearchsubmit uk-button uk-button-primary" type="submit" value="Quick Search">
+                                        </form>
+                                        
+                                    </div>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small uk-float-right" data-uk-offcanvas></a>
+            </nav>
+            
+            
+
+       
+                   <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-1-1">
+                    <h1 class="uk-heading-large">Data</h1>
+                </div>
+            </div>
+            
+            
+            <div class="uk-grid uk-grid-match" data-uk-grid-margin data-uk-grid-match="{row: false; target:'.uk-panel}">
+               <div class = "uk-width-large-1-2">
+                <div class="uk-panel uk-panel-box uk-panel-header">
+                   <h3 class="uk-panel-title">PostgreSQL</h3>
+                   <p>A complete PostgreSQL dump of the Canadian Hansard dataset, updated on the last day of each month.</p>
+                   <ul><li><a href="/media/canadianhansard.sql.gz">canadianhansard.sql.gz</a></li></ul>
+                    </div></div>
+                    <div class = "uk-width-large-1-2">
+                <div class="uk-panel uk-panel-box uk-panel-header">
+                <h3 class="uk-panel-title">CSV (Comma-Separated Variable)</h3>
+                <p>Custom download of the Canadian Hansard dataset in a UTF-8 CSV file. Select a date range to download file:</p>
+                              <form class = "uk-form" method="post" action =".">
+                                       {% csrf_token %}
+                                        <div class="uk-form-row">
+                                        <label class="uk-form-label" for="form-s-s">From:</label>
+                                        <div class="uk-form-controls">
+                                           {{ form.sd|add_class:"uk-form" }}
+                                           {% if form.sd.errors %}
+                                            {% for error in form.sd.errors %}
+                                            <div class="uk-alert uk-alert-danger">{{ error|escape }}</div>
+                                            {% endfor %}
+                                            {% endif %}
+
+                                        </div>
+                                            </div>
+
+                                    <div class="uk-form-row">
+                                        <label class="uk-form-label" for="form-s-s">To:</label>
+                                        <div class="uk-form-controls">
+                                            {{ form.ed|add_class:"uk-form" }}
+                                            {% if form.ed.errors %}
+                                            {% for error in form.ed.errors %}
+                                            <div class="uk-alert uk-alert-danger">{{ error|escape }}</div>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="uk-form-row">
+                                    <div class="uk-form-icon">
+                                        <i class="uk-icon-download"></i><input class="uk-button" type="submit" value="Export to CSV"></div>
+                                  </div>
+                                    
+                                    </form>
+                                         
+                                                             <p><span class="uk-badge">NOTE</span> Older versions of Excel may be unable to open this file because of French language characters. <br>We recommend using <a href="https://www.libreoffice.org/">LibreOffice</a> or <a href="https://www.openoffice.org/">OpenOffice</a> to view exported CSV files.</p>
+
+
+               </div></div>
+               <div class = "uk-width-large-1-2">
+                <div class="uk-panel uk-panel-box uk-panel-header">
+                <h3 class="uk-panel-title">XML</h3>
+                <p>XML Canadian Hansard dataset digitized from original documents by the Lipad Group. <strong>1901-1993 inclusive.</strong></p>
+                <ul><li><a href="/media/ca-proc.tar.gz">ca-proc.tar.gz</a></li></ul>
+                    </div></div>
+                    <div class = "uk-width-large-1-2">
+                <div class="uk-panel uk-panel-box uk-panel-header">
+                    <h3 class="uk-panel-title">Supplementary Data</h3>
+                    <p>Additional data on parties and politicians in XML format.</p>
+                        <ul><li><a href="/media/ca-parties.tar.gz">ca-parties.tar.gz</a></li>
+                        <li><a href="/media/ca-parties.tar.gz">ca-members.tar.gz</a></li></ul>
+                    </div></div>
+                    <div class = "uk-width-large-1-2">
+                <div class="uk-panel uk-panel-box uk-panel-header">  
+                    <h3 class="uk-panel-title">More Data Sources</h3>
+                    
+                        <ul><li><a href="http://openparliament.ca">openparliament.ca</a> maintains a searchable record and PostgreSQL <a href="https://openparliament.ca/data-download/">data dump</a> of Canadian Hansard proceedings from 1994-.</li>
+                        </ul></div>
+                    
+                    
+                </div>
+                
+                                    <div class = "uk-width-large-1-2">
+                <div class="uk-panel uk-panel-box uk-panel-header">  
+                    <h3 class="uk-panel-title">Usage Notes</h3>
+                    For a list of known dataset issues, please refer to <a href="/help/#bugs">Bugs and Upcoming Features</a>.
+         </div>
+                    
+                    
+                </div>
+                
+                </div>
+                
+            </div>
+
+  
+
+{% endblock content %}
+{% endblock base_body %}

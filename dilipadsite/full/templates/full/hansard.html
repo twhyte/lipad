@@ -1,0 +1,285 @@
+{% extends 'full/main.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block head_js %}
+
+{% endblock head_js %}
+
+{% block base_body %}
+
+{% block content %}
+    
+    <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom" id="main">
+
+<nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand" href="/"><img src='{% static "home/images/logo.png" %}' style = "max-height:90%; margin-bottom:2px" /></a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                
+                    <li>
+                        <a class="nav_text" href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a class="nav_text" href="/help/">Help</a>
+                    </li>
+                </ul>
+                
+                <ul class="uk-navbar-nav uk-hidden-small uk-navbar-flip">
+                    <li>
+                        <a href="/search/">Search</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/full/">Timeline</a>
+                    </li>
+                    <li>
+                        <a href="/data/">Data</a>
+                    </li>
+
+                    
+                                        <li>
+                        <div class="uk-navbar-content uk-hidden-small">
+                                        <form class="uk-form uk-margin-remove uk-display-inline-block fontfix" action ="/search/" method = 'get'>
+                                            <input type="text" class = "navsearchtext" name = 'q' placeholder="Search">
+                                            <input id="searchsubmit" class = "navsearchsubmit uk-button uk-button-primary" type="submit" value="Quick Search">
+                                        </form>
+                                        
+                                    </div>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small uk-float-right" data-uk-offcanvas></a>
+            </nav>
+            
+            
+            
+            
+            
+          <div class = "uk-grid uk-clearfloat uk-margin-bottom" data-uk-grid-margin>
+           <div class="uk-width-large-1-2">
+            <ul class="uk-breadcrumb">
+                <li><a href="/full/">Timeline</a></li>
+                <li><a href='/full/{{ hansard.1.speechdate|date:"Y" }}/'>{{ hansard.1.speechdate|date:"Y" }}</a></li>
+                <li><a href='/full/{{ hansard.1.speechdate|date:"Y" }}/{{ hansard.1.speechdate|date:"m" }}/'>{{ hansard.1.speechdate|date:"F" }}</a></li>
+                <li class="uk-active"><span>{{ hansard.1.speechdate|date:"l, F j" }}</span></li>
+            </ul>
+            </div>
+            <div class="uk-width-large-1-2">
+            <a href='/full/{{ hansard.1.speechdate|date:"Y" }}/{{ hansard.1.speechdate|date:"m" }}/{{ hansard.1.speechdate|date:"d" }}/exportcsv/' class="uk-button uk-float-right"><i class="uk-icon-download"></i> Export to CSV</a>
+                        
+            </div>
+            
+        </div>
+        
+        <div class="uk-block uk-block-muted uk-margin-bottom">
+              
+               <div class="uk-container uk-slidenav-position">
+                 <div class = "uk-grid">
+                  <h1 class="uk-heading-large uk-align-center">{{ hansard.1.speechdate|date:"F j, Y" }}</h1>
+                   </div>
+                   
+                       <a href="{{ previous }}" class="uk-slidenav uk-slidenav-previous" style="display: inherit;"></a>
+    <a href="{{ next }}" class="uk-slidenav uk-slidenav-next" style="display: inherit;"></a>
+
+                
+                
+                </div>
+                
+            
+        </div>
+
+        <div class="uk-container">
+        
+        <div class="uk-grid uk-margin-top" data-uk-grid-margin>
+           
+                        
+            
+               
+                {% for result in page %}
+
+                
+                {% if result.is_topic %}
+                
+                <div class="uk-width-1-1">
+                
+                    <div class="alert-topic uk-container-center"><h2 class="uk-align-center uk-margin-remove"><center><em>{{ result.maintopic }}</center></em></h2></div>
+                
+                </div>
+                
+                {% elif result.is_subtopic %}
+                
+                
+                <div class="uk-width-1-1">
+                
+                    <div class="alert-topic uk-container-center"><h3 class ="uk-align-center uk-margin-remove"><center><em>{{ result.subtopic }}</center></em></h3></div>
+                
+                </div>
+                
+                
+                {% elif result.is_stagedirection %}
+                
+                
+                <div class="uk-width-1-1">
+                
+                <hr class="uk-grid-divider">
+                
+                <em><p>{{ result.speechtext }}</p></em>
+                
+                <hr class="uk-grid-divider">
+                
+                </div>
+                
+                
+                {% else %}
+                
+                <div class="uk-width-1-1">
+                
+                {% if refer_pk %}
+                       
+                        {% if result.basepk|stringformat:"s" == refer_pk|stringformat:"s" %}
+                           
+                            <div class="uk-panel uk-panel-box panelhighlight" id ='{{ result.basepk|stringformat:"s" }}'>
+                              
+                               
+                        {% else %}
+                            
+                            <div class="uk-panel uk-panel-box panelshadow" id ='{{ result.basepk|stringformat:"s" }}'>
+                              
+                        {% endif %}
+                               
+                {% else %}
+                       
+                       <div class="uk-panel uk-panel-box panelshadow" id ='{{ result.basepk|stringformat:"s" }}'>
+                       
+                {% endif %}
+                       
+                      <div class="uk-grid">
+                      <div class="uk-width-1-1">
+                          </div>
+                       </div>
+                       <div class="uk-grid">
+                       
+                           <div class="uk-width-1-6">
+                               <img class = "pol-image uk-align-center" src='{% static result.get_static_img %}' >
+                               
+                               
+                           </div>
+                           
+                           
+                           <div class="uk-width-5-6">
+                           
+                            <div class="corner-ribbon right" style ='background: {{ result.get_party_colour }}; color:{{ result.get_party_textcolour }};'>{{ result.get_party_abbrev }}</div>
+                             <article class="uk-comment">
+                                 {% if not result.is_stagedirection %}
+                                <header class="uk-comment-header">
+                                        <h3 class="uk-margin-bottom-remove">{{ result.speakername }} {{ result.get_display_speakerposition }}</h3>
+
+                                {% if not result.pid == 'intervention' %}
+                                        <strong><h3 class="uk-comment-title uk-margin-top-remove uk-margin-bottom"> {{ result.speakerparty }}</h3></strong>
+                                    <div class="uk-button-group uk-float-left">
+                                
+                                <a class="uk-button uk-button-mini" href="{{ result.get_parlinfo_url }}">Member Biography</a>
+                                <a class="uk-button uk-button-mini" href="{{ result.get_party_url }}">Party Information</a>
+                                       
+                                       </div>
+                                        {% endif %}
+
+                                
+                                 </header>
+                                 {% endif %}
+                                 
+                                 <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+                                 {% if result.speakeroldname %}
+                                 <p>{{ result.speakeroldname }}</p>
+                                     {% endif %}
+            
+                                <p><i class="uk-icon-quote-left uk-icon-medium uk-align-left"></i><p>{{ result.speechtext|linebreaks }}</p>
+                                </div>
+
+                                <div class="uk-float-left uk-margin-top uk-h5">
+                                  {% if result.maintopic %}
+                                   
+                                   <strong>Topic:&nbsp;&nbsp;</strong> {{ result.maintopic }}
+                                    {% endif %}
+                                    {% if result.subtopic %}
+                                    <br><strong>Subtopic:&nbsp;&nbsp;</strong> {{ result.subtopic }}
+                                    {% endif %}
+                                    </div>
+
+                               <div class="uk-button-group uk-float-right uk-margin-top">
+                                <a class="uk-button uk-button-small" href="{{ result.get_permalink_url }}">Permalink</a>
+                                <button class="uk-button uk-button-small" disabled>Report an Error</button>
+
+                                </div>
+                              
+                               </div>
+                               
+              
+                               
+                           </div>
+                </div>
+                </div>
+                
+
+                
+          
+                  {% endif %}
+                    {% endfor %}
+            </div>
+                    
+        </div>
+          
+          <div class = "uk-block">
+           
+
+        
+        <ul class="uk-pagination">
+        
+        {% if page.has_previous %}<li><a href="{{ baseurl }}{{ page.previous_page_number }}" class="fontfix"><</a></li>{% endif %} 
+        
+        {% for num in page.page_range %}
+        {% if not num %}<li><span class="fontfix">...</span></li>
+        {% elif pageno|stringformat:"s" == num|stringformat:"s" %}
+        <li class="uk-active"><span class="fontfix">{{ num }}</span></li>
+            {% else %}
+        <li><a href="{{ baseurl }}{{ num }}" class="fontfix">{{ num }}</a></li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if page.has_next %}<li><a href="{{ baseurl }}{{ page.next_page_number }}" class="fontfix">></a></li>{% endif %}
+        
+        </ul>
+
+              </div>
+
+                <div class="uk-block uk-block-muted uk-padding-remove">
+              
+               <div class="uk-container uk-slidenav-position">
+                 <div class = "uk-grid">
+                  <h1 class="uk-align-center uk-heading-small uk-margin-top">{{ hansard.1.speechdate|date:"F j, Y" }}</h1>
+                   </div>
+                   
+                       <a href="{{ previous }}" class="uk-slidenav uk-slidenav-previous" style="display: inherit;"></a>
+    <a href="{{ next }}" class="uk-slidenav uk-slidenav-next" style="display: inherit;"></a>
+
+                
+                
+                </div>
+                
+            
+        </div>
+</div>
+
+                    
+        
+{% endblock content %}
+
+{% endblock base_body %}
+
+   
+
+    
+
+
+

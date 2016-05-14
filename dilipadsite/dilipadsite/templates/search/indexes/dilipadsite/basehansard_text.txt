@@ -1,0 +1,6 @@
+{{ object.speakername }}
+{{ object.speakerparty }}
+{{ object.speakerriding }}
+{{ object.speechtext }}
+{{ object.maintopic }}
+{{ object.subtopic }}

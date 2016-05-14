@@ -1,0 +1,8 @@
+{{ object.speechelementid }}
+{{ object.speechdate }}
+{{ object.speakername }}
+{{ object.speakerriding }}
+{{ object.speakerparty }}
+{{ object.maintopic }}
+{{ object.subtopic }}
+

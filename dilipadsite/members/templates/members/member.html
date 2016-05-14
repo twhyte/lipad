@@ -1,0 +1,168 @@
+{% extends 'data/main.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block base_body %}
+
+{% block content %}
+    
+    <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom" id="main">
+<a name="top" style="display:hidden;"></a>
+
+<nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand" href="/"><img src='{% static "home/images/logo.png" %}' style = "max-height:90%; margin-bottom:2px" /></a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                
+                    <li>
+                        <a class="nav_text" href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a class="nav_text" href="/help/">Help</a>
+                    </li>
+                </ul>
+                
+                <ul class="uk-navbar-nav uk-hidden-small uk-navbar-flip">
+                    <li>
+                        <a href="/search/">Search</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/full/">Timeline</a>
+                    </li>
+                    <li>
+                        <a href="/data/">Data</a>
+                    </li>
+
+                    
+                                        <li>
+                        <div class="uk-navbar-content uk-hidden-small">
+                                        <form class="uk-form uk-margin-remove uk-display-inline-block fontfix" action ="/search/" method = 'get'>
+                                            <input type="text" class = "navsearchtext" name = 'q' placeholder="Search">
+                                            <input id="searchsubmit" class = "navsearchsubmit uk-button uk-button-primary" type="submit" value="Quick Search">
+                                        </form>
+                                        
+                                    </div>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small uk-float-right" data-uk-offcanvas></a>
+            </nav>
+            
+            
+
+       
+                   <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-1-1">
+                    <h1 class="uk-heading-large">Mackenzie King</h1>
+                </div>
+            </div>
+            
+            
+            <div class="uk-grid" data-uk-grid-margin>
+               
+               <div class="uk-width-large-1-5 uk-width-small-1-1">
+               <div class = "uk-panel uk-panel-box">
+               
+                <div class="uk-grid">
+               
+               <div class="uk-width-1-1">
+               
+               <center><h3>Right Honourable Super William Lyon Mackenzie King</h3></center>
+                </div>
+                
+                
+                
+               <img class = "uk-align-center uk-margin" src="http://www.lipad.ca/static/dilipadsite/polimages/b11f5b30-7d32-44e6-b23c-a24561c1eaf5.jpg">
+               
+                   </div>
+                   
+                   <div class="uk-width-1-1">
+
+                   <div class = "uk-panel uk-panel-box uk-panel-box-secondary">
+                   
+                   
+               
+                <dl class="uk-description-list-line">
+                    <dt>Party</dt>
+                    <dd>Liberal</dd>
+                    <dt>Date of Birth</dt>
+                    <dd>October 1, 1986</dd>
+                    <dt>Gender</dt>
+                    <dd>Male</dd>
+                    <dt>Occupation</dt>
+                    <dd>Bolster</dd>
+                
+                </dl>
+               
+               
+               </div>
+                    </div>
+                   </div>
+                   </div>
+                
+            <div class="uk-width-large-4-5 uk-width-small-1-1">
+            <h2>Latest Speeches</h2>
+            <hr>
+             
+             <div class="uk-panel uk-panel-box panelshadow">
+                       <div class="uk-grid">
+
+                       <div class="uk-width-1-1">
+                       
+                       <strong><h1 class="topictext uk-panel-title uk-panel-header">February 18, 1910</h1></strong>
+                          
+                           </div>
+
+                           <div class="uk-width-1-1">
+                                 
+                                 
+                                 <div class="uk-panel uk-panel-box uk-panel-box-secondary">
+                                 
+                                 <p>Mr. PUGSLEY.</p>
+                                     
+            
+                                <p><i class="uk-icon-quote-left uk-icon-medium uk-align-left"></i></p><p>
+                                That this House do agree to concur in the appointment of a joint committee to consider the following matters;
+1.	The forms of bills and the best means of affording information and assistance in the consideration thereof at all stages of legislation in both Houses of parliament;
+2.	The better distribution of the work of legislation between the two Houses [DOT]
+3.	The practical operation of the provisions of the Senate and House of Commons Act, Revised Statutes of Canada, 1906, chapter 10, respecting the attendance of senators and members of the House of Commons, and the expediency of making any alterations in those provisions;
+And that Messieurs Boivin, Charters, Euler, Hudson and Millar be members of such committee on the part of the House;
+That a message be sent to the Senate informing their Honours of the above resolution;
+That the Clerk do carry the said message to the Senate.
+</p>
+                                </div>
+
+                                <div class="uk-float-left uk-margin-top uk-h5">
+                                  
+                                   
+                                   <strong>Topic:&nbsp;&nbsp;</strong> SUPPLY.
+                                    
+                                    
+                                    </div>
+
+                               <div class="uk-button-group uk-float-right uk-margin-top">
+                                <a class="uk-button uk-button-small" href="/full/1910/02/18/fullview/289578/">Full View</a>
+                                <a class="uk-button uk-button-small" href="/full/permalink/289578">Permalink</a>
+                                <button class="uk-button uk-button-small" disabled="">Report an Error</button>
+
+                                </div>
+                              
+                               </article></div>
+                               
+              
+                               
+                           </div>
+                </div>
+              
+                </div>
+               
+                </div>
+                
+                
+            </div>
+
+  
+
+{% endblock content %}
+{% endblock base_body %}

@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hello,
+
+You have a new contact message sent by: {{ contact_msg.name }}
+The message:
+
+{{ contact_msg.message }}
+
+--
+Kind regards,
+{{ site }}
+{% endautoescape %}

@@ -1,0 +1,59 @@
+{% extends "andablog/base.html" %}
+{% load andablog_tags %}
+{% load taggit_extras %}
+
+{% block andablog_meta %}
+    <meta name="description" content="{{ entry.title }}">
+    <meta name="author" content="{{ entry.author.get_full_name }}">
+{% endblock %}
+
+{% block andablog_page_title %}
+    {{ entry.title }} - The Lipad Blog - Explore the Canadian Hansard
+{% endblock %}
+
+{% block andablog_content %}
+   
+   <div class="uk-grid" data-uk-grid-margin="">
+               <h1 class="uk-heading-large">The Lipad Blog</h1>
+                <div class="uk-width-medium-3-4 uk-row-first">
+
+                    <article class="uk-article">
+                       
+                        <h1 class="uk-article-title">{{ entry.title }}</h1>
+
+                        <p class="uk-article-meta">{{ entry.published_timestamp|date:"DATE_FORMAT" }}{% if entry.author %} by {{ entry.author.get_full_name }}{% endif %}</p>
+
+                        <p>
+                          {{ entry.content }}  
+                        </p>
+
+                    </article>
+                    
+                    <a class="uk-button uk-button-primary" href="/blog/">< Return to Blog</a>
+                    
+                    </div>
+                    
+                    
+
+                <div class="uk-width-medium-1-4">
+                    <div class="uk-panel uk-panel-box uk-text-center">
+                        <img class="uk-border-circle" width="120" height="120" src="{{ entry.author.blogger.pictureurl }}" alt="">
+                        <h3><a href="{{ entry.author.blogger.url }}">{{ entry.author.get_full_name }}</a></h3>
+                        <p>{{ entry.author.blogger.bio }}</p>
+                    </div>
+                    <!--<div class="uk-panel">
+                        <h3 class="uk-panel-title">Archives</h3>
+                        <ul class="uk-list uk-list-line">
+                            <li><a href="#">January 2014</a></li>
+                            <li><a href="#">December 2013</a></li>
+                            <li><a href="#">November 2013</a></li>
+                            <li><a href="#">October 2013</a></li>
+                            <li><a href="#">September 2013</a></li>
+                        </ul>
+                    </div>-->
+                </div>
+
+            
+</div>
+   
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'full/main.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% load full_extras %}
+
+{% block base_body %}
+
+{% block content %}
+    
+    <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom" id="main">
+
+<nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand" href="/"><img src='{% static "home/images/logo.png" %}' style = "max-height:90%; margin-bottom:2px" /></a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                
+                    <li>
+                        <a class="nav_text" href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a class="nav_text" href="/help/">Help</a>
+                    </li>
+                </ul>
+                
+                <ul class="uk-navbar-nav uk-hidden-small uk-navbar-flip">
+                    <li>
+                        <a href="/search/">Search</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/full/">Timeline</a>
+                    </li>
+                    <li>
+                        <a href="/data/">Data</a>
+                    </li>
+
+                    
+                                        <li>
+                        <div class="uk-navbar-content uk-hidden-small">
+                                        <form class="uk-form uk-margin-remove uk-display-inline-block fontfix" action ="/search/" method = 'get'>
+                                            <input type="text" class = "navsearchtext" name = 'q' placeholder="Search">
+                                            <input id="searchsubmit" class = "navsearchsubmit uk-button uk-button-primary" type="submit" value="Quick Search">
+                                        </form>
+                                        
+                                    </div>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small uk-float-right" data-uk-offcanvas></a>
+            </nav>
+            
+               
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-1-1">
+                    <h1 class="uk-heading-large">Explore Timeline</h1>
+                    <p class="uk-text-large">Navigate the Canadian Hansard by date.</p>
+                </div>
+            </div>
+
+            <div class="uk-grid" data-uk-grid-margin>
+               
+               
+                <div class="uk-width-medium-3-4">
+
+               <ul class="cbp_tmtimeline">
+            {% for decade, value in timeline %}     
+	<li>
+	<div class="cbp_tmtime" id = "{{ decade }}"><span>{{ decade }}</span></div>
+   <div class="cbp_tmicon"></div>
+    <div class="cbp_tmlabel">
+   
+   <ul class="cd-accordion-menu animated">
+   {% for year, value2 in value.items %}
+		<li class="has-children">
+			<input type="checkbox" name ="year_{{ year }}" id ="year_{{ year }}">
+			<label for="year_{{ year }}" class="fontfix">{{ year }}</label>
+      		<ul>
+      		{% for month, value3 in value2.items %}
+      			<li class="has-children">
+      				<input type="checkbox" name ="{{ year }}_{{ month }}" id="{{ year }}_{{ month }}">
+					<label for="{{ year }}_{{ month }}" class="fontfix">{{ month|month_name }}</label>
+                          <ul>
+                      {% for day, value4 in value3.items %}
+                      <li><a href='{{ year }}/{{ value4|date:"m" }}/{{ value4|date:"d"}}/'>{{ value4|date:"F j, Y" }}</a></li>
+                     {% endfor %}
+                        </ul>
+      			</li>
+      		{% endfor %}
+      		</ul>
+		</li>
+    {% endfor %}
+    </ul>
+ 
+    </div>
+        </li>
+                  {% endfor %}
+                   
+                    </ul>
+                </div>
+                
+
+                <div class="uk-width-medium-1-4">
+
+                    <div class="uk-panel uk-panel-box uk-margin-top" data-uk-sticky="{top:40, boundary:true}">
+                        <ul class="uk-nav uk-nav-side" data-uk-scrollspy-nav="{closest:'li', smoothscroll:true}">
+                            <li class="uk-nav-header">Navigate by Decade</li>
+                            <li class="uk-active"><a href="#1900">1900s</a></li>
+                            <li class=""><a href="#1910">1910s</a></li>
+                            <li class=""><a href="#1920">1920s</a></li>
+                            <li class=""><a href="#1930">1930s</a></li>
+                            <li class=""><a href="#1940">1940s</a></li>
+                            <li class=""><a href="#1950">1950s</a></li>
+                            <li class=""><a href="#1960">1960s</a></li>
+                            <li class=""><a href="#1970">1970s</a></li>
+                            <li class=""><a href="#1980">1980s</a></li>
+                            <li class=""><a href="#1990">1990s</a></li>
+                            <li class=""><a href="#2000">2000s</a></li>
+                            <li class=""><a href="#2010">2010s</a></li>
+                            
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+                
+                
+
+
+{% endblock content %}
+
+<script src='{% static "full/js/main.js" %}'></script>
+
+{% endblock base_body %}

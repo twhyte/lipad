@@ -1,0 +1,11 @@
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% if field.errors %}
+<ul class="errorlist uk-list">
+  {% for error in field.errors %}
+  <li>{{ error|add_class:"uk-form uk-form-large uk-alert uk-alert-danger" }}</li>
+  {% endfor %}
+</ul>
+{% endif %}

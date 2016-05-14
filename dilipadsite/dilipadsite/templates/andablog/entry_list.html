@@ -1,0 +1,66 @@
+{% extends "andablog/base.html" %}
+{% load andablog_tags %}
+{% load taggit_extras %}
+{% load static %}
+
+{% block andablog_meta %}
+    <meta name="description" content="Latest Lipad blog entries">
+{% endblock %}
+
+{% block andablog_page_title %}
+    The Lipad Blog - Latest Entries - Explore the Canadian Hansard
+{% endblock %}
+
+{% block andablog_content %}
+   
+           <div class="uk-grid" data-uk-grid-margin>
+               
+               <h1 class="uk-heading-large">The Lipad Blog</h1>
+               
+                <div class="uk-width-medium-3-4">
+                    
+                    {% for entry in entries %}
+
+                    <article class="uk-article">
+
+                        <h1 class="uk-article-title">
+                            <a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a>
+                        </h1>
+
+                        <p class="uk-article-meta">{{ entry.published_timestamp|date:"DATE_FORMAT" }}{% if entry.author %} by {{ entry.author.get_full_name }}{% endif %}</p>
+
+                        <p>
+                            {{ entry.content|truncatewords_html:150 }} 
+                        </p>
+
+                        <a class="uk-button uk-button-primary" href="{{ entry.get_absolute_url }}">Continue Reading</a>
+
+                    </article>
+                    
+                    {% endfor %}
+                    
+                    {% include "andablog/pagination_snippet.html" with page_obj=page_obj %}
+
+                </div>
+
+                <div class="uk-width-medium-1-4">
+                    <div class="uk-panel uk-panel-box uk-text-center">
+                       <img src='{% static "dilipadsite/images/faviconbasetransparent.png" %}' width=100px>
+                        <h3>About The Lipad Blog</h3>
+                        <p>The latest updates, analysis, and research notes from the Lipad team.</p>
+                    </div>
+                    
+                    <!--<div class="uk-panel">
+                        <h3 class="uk-panel-title">Archives</h3>
+                        <ul class="uk-list uk-list-line">
+                            <li><a href="#">January 2014</a></li>
+                            <li><a href="#">December 2013</a></li>
+                            <li><a href="#">November 2013</a></li>
+                            <li><a href="#">October 2013</a></li>
+                            <li><a href="#">September 2013</a></li>
+                        </ul>
+                    </div>-->
+                </div>
+            </div>
+            
+{% endblock %}

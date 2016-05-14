@@ -1,0 +1,45 @@
+{% load i18n %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+<form id="CF" class = "uk-form uk-form-stacked" action="{% url 'contactme-post-contact-form' %}" method="post">{% csrf_token %}
+
+  {% if form.errors %}
+  <div class="errors uk-alert uk-alert-danger"><p>{% blocktrans count form.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}</p></div>
+  {% endif %}
+
+  {% if next %}
+  <div><input type="hidden" name="next" value="{{ next }}" /></div>
+  {% endif %}
+
+  {% for field in form %}
+  {% if field.is_hidden %}
+  <div style="display:none">{{ field }}</div>
+  {% else %}
+  <div class="uk-form-row">
+  <div {% if field.errors %} class="error"{% endif %}
+    {% ifequal field.name "honeypot" %} style="display:none;"{% endifequal %}>
+    {% ifequal field.name "message" %}
+    {{ field|add_class:"uk-form uk-form-large uk-width-1-1" }}{% endifequal %}
+    {% ifequal field.name "email" %}
+    <label class="uk-form-label fontfix" for="form-s-s">Email address (required for verification):</label>
+    {{ field|add_class:"uk-form uk-form-large uk-width-1-1" }}{% endifequal %}
+    {% ifequal field.name "name" %}
+    <label class="uk-form-label fontfix" for="form-s-s">{{ field.label_tag }}</label>
+    {{ field|add_class:"uk-form uk-form-large uk-width-1-1" }}
+    {% endifequal %}
+  </div>
+    </div>
+  {% if field.errors %}{{ field.errors }}{% endif %}
+  {% endif %}
+  {% endfor %}
+    
+    <div class="uk-form-row">
+
+    <input type="submit" name="post" class="uk-button" value="{% trans 'Send Message' %}" />
+    
+    </div>
+    
+</form>

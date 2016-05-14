@@ -1,0 +1,93 @@
+{% extends "django_contactme/base.html" %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block title %}{{ block.super }}&nbsp;&raquo;&nbsp;confirmation sent{% endblock %}
+
+{% block content %}
+            
+                                <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom" id="main">
+<a name="top" style="display:hidden;"></a>
+
+<nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand" href="/"><img src='{% static "home/images/logo.png" %}' style = "max-height:90%; margin-bottom:2px" /></a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                
+                    <li>
+                        <a class="nav_text" href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a class="nav_text" href="/help/">Help</a>
+                    </li>
+                </ul>
+                
+                <ul class="uk-navbar-nav uk-hidden-small uk-navbar-flip">
+                    <li>
+                        <a href="/search/">Search</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/full/">Timeline</a>
+                    </li>
+                    <li>
+                        <a href="/data/">Data</a>
+                    </li>
+
+                    
+                                        <li>
+                        <div class="uk-navbar-content uk-hidden-small">
+                                        <form class="uk-form uk-margin-remove uk-display-inline-block fontfix" action ="/search/" method = 'get'>
+                                            <input type="text" class = "navsearchtext" name = 'q' placeholder="Search">
+                                            <input id="searchsubmit" class = "navsearchsubmit uk-button uk-button-primary" type="submit" value="Quick Search">
+                                        </form>
+                                        
+                                    </div>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
+            </nav>
+
+                   {% load contactme %}
+
+                   <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-1-1">
+                    <h1 class="uk-heading-large">Contact Lipad</h1>
+                </div>
+            
+
+            <div class="uk-width-1-1">
+                  
+                          <div class="uk-panel">
+              
+            <h2>Thank you for your message!</h2>
+
+
+                <p>You have successfully confirmed your email address and we have received your message.
+                <br>We'll get back to you as soon as possible.</p>
+                <em>- The Lipad Team</em>
+
+               
+            
+                
+            
+            </div>
+           
+           
+           
+           
+            
+            </div>
+            
+            </div>
+            
+            
+            </div>
+</div>
+
+            
+
+  
+{% endblock %}
+

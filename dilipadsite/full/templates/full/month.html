@@ -1,0 +1,104 @@
+{% extends 'full/main.html' %}
+
+{% load staticfiles %}
+
+{% load widget_tweaks %}
+
+{% block base_body %}
+
+{% block content %}
+    
+    <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom" id="main">
+
+<nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand" href="/"><img src='{% static "home/images/logo.png" %}' style = "max-height:90%; margin-bottom:2px" /></a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                
+                    <li>
+                        <a class="nav_text" href="/#about">About</a>
+                    </li>
+                    <li>
+                        <a class="nav_text" href="/help/">Help</a>
+                    </li>
+                </ul>
+                
+                <ul class="uk-navbar-nav uk-hidden-small uk-navbar-flip">
+                    <li>
+                        <a href="/search/">Search</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/full/">Timeline</a>
+                    </li>
+                    <li>
+                        <a href="/data/">Data</a>
+                    </li>
+
+                    
+                                        <li>
+                        <div class="uk-navbar-content uk-hidden-small">
+                                        <form class="uk-form uk-margin-remove uk-display-inline-block fontfix" action ="/search/" method = 'get'>
+                                            <input type="text" class = "navsearchtext" name = 'q' placeholder="Search">
+                                            <input id="searchsubmit" class = "navsearchsubmit uk-button uk-button-primary" type="submit" value="Quick Search">
+                                        </form>
+                                        
+                                    </div>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small uk-float-right" data-uk-offcanvas></a>
+            </nav>
+            
+            
+            
+            
+            
+        <div class="uk-container">
+            <ul class="uk-breadcrumb">
+                <li><a href="/full/">Timeline</a></li>
+                <li><a href="/full/{{ year }}">{{ year }}</a></li>
+        <li class="uk-active"><span>{{ monthname }}</span></li>
+                
+            </ul>
+            
+        </div>
+        
+                <div class="uk-block uk-block-muted uk-padding-remove uk-margin-top">
+              
+               <div class="uk-container uk-slidenav-position">
+                 <div class = "uk-grid">
+                  <h1 class="uk-align-center uk-heading-small uk-margin-top">{{ monthname }} {{ year }}</h1>
+                   </div>
+                   
+                       <a href="{{ previous }}" class="uk-slidenav uk-slidenav-previous" style="display: inherit;"></a>
+    <a href="{{ next }}" class="uk-slidenav uk-slidenav-next" style="display: inherit;"></a>
+
+                
+                
+                </div>
+                
+            
+        </div>
+        
+        <div class="uk-container">
+         
+        <div class="uk-grid uk-margin-top" data-uk-grid-margin>           
+
+                   <ul>
+                   
+                   {% for day in dates %}
+                   
+                   <li><a href = "/full/{{ year }}/{{ day.0|date:'m' }}/{{ day.0|date:'d' }}">{{ day.0|date:"l, F j" }}</a></li> 
+                    
+                    {% endfor %}
+
+            </div>
+                    
+        </div>
+            </div>
+
+                    
+        
+{% endblock content %}
+{% endblock base_body %}
+
+

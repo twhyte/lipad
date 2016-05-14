@@ -1,0 +1,183 @@
+{% extends "home/main.html" %}
+
+{% load staticfiles %}
+{% load andablog_tags %}
+{% load widget_tweaks %}
+
+{% block base_body %}
+
+	<div id="bg">
+	  <img src='{% static "home/images/heroparliament.jpg" %}'alt="">
+	</div>
+	<header id="header">
+		<div class="wrapper">
+			<a href="#home" class="logo"><img src='{% static "home/images/logo.png" %}'/></a>
+			<span class="nav-button"><i class="fa fa-bars"></i></span>
+			<nav class="main-nav">
+				<ul class="up-sml">
+                    <li class="sprd"><a href="/search/"><span>Search</span></a></li>
+                    <li class="sprd"><a href="/full/"><span>Timeline</span></a></li>
+                    <li class="sprd"><a href="/data/"><span>Data</span></a></li>
+					<li class="sprd"><a href="#about"><span>About</span></a></li>
+					<li class="sprd"><a href="/blog/"><span>Blog</span></a></li>
+					<li class="sprd"><a href="/contact/"><span>Contact</span></a></li>
+				</ul>
+			</nav>	
+		</div>		
+	</header>
+	<section id="home" class="splash-page splash">
+		<div class="wrapper sml vert">
+			<div class="column-12 black-box scroll-opacity para-med">
+				<p class="xl no-margin animate-from-bottom white"><b>We've digitized Canada's Parliament.</b></p>
+                <p class="animate-from-bottom white">Search the Canadian Hansard from 1901 to today.</p>
+                    <form id = "search" action="/search/" method="get">
+                        <input id="searchfield" name="q" type="text">
+                        <input id="searchsubmit" type="submit" value="Search">
+                    </form>
+                <a href="/search/"><span>Advanced Search...</span></a>
+                </div>
+			</div>
+		</div>	
+		<a href="#content"><i class="scroll-prompt fa fa-chevron-down scroll-opacity"></i></a>
+	</section>
+	<section id="content" class="primary">
+		<div class="wrapper sml">
+			<div class="column-12">
+				<p class="xl center no-margin">Welcome to <b>LiPaD:</b></p><p class = "lrg center no-margin">The Linked Parliamentary Data Project</p>
+			</div>
+		</div>
+	</section>
+	
+	<section id="about" class="about whitealt">
+			<div class="column-12">
+				<p class="xl center">About the <b>Canadian Hansard</b> Dataset</p>
+</div>
+           <div class="wrapper">
+            <div class="column-12"><div class="info-block"><div class="details">
+                <p class = "desc">The transcript of Parliamentary Debates (“Hansard”) is a 150-year running record of Canadian political history.  This richness presents political historians with a needle-in-a-haystack problem of an enormous magnitude.  At a rate of a novel’s worth of reading each day, it would take <em>27 years</em> to read the 680 million words of Hansard.  It would take a further 6 years to read what was added in the interim.</p><br></div></div>
+				
+                <div class="info-block"><div class="details"><p class = "desc">In 2013, a group of political scientists, computer scientists, and historians teamed up at the University of Toronto to solve this problem.  With support from the SSHRC, the NSERC, the Digging into Data initiative, the Library of Parliament, <a href="http://www.canadiana.ca/en/home">Canadiana.org</a>, and Michael Mulley at <a href="https://openparliament.ca/">openparliament.ca</a>, a key output of this collaboration is the first machine-readable and fully searchable historical Hansard.  We have linked to these data to various biographical properties of parliamentarians, including their party and gender.  This corpus underpins the search interface of this website.</p><br></div></div>
+
+<div class="info-block"><div class="details"><p class = "desc">We are continuously expanding this corpus and features on this website.  We are adding the Debates of the Senate and the transcripts of parliamentary committees.  We are also integrating more and more information about parliamentarians, including information about the demographic profiles and election outcomes in their constituencies.  To request data or for information about how to get involved in this project, please <a href="/contact/">contact us.</a>
+    </p><br></div></div>
+                <div class="info-block"><div class="details"><p class = "desc">A full description of our project in a published article for citation purposes is forthcoming.</p></div></div>
+                
+                </div>
+            
+</section>
+			
+			<section id="faq" class="about white">
+
+
+		<div class="wrapper">
+			<div class="column-6">
+				<div class="info-block">
+					<div class="details">
+						<h3 class="title">Qu'en est-il de la version française?</h3>
+<p class="desc">La numérisation de la version française du Hansard de la Chambre des communes est une priorité pour notre équipe. À l'heure actuelle, nous ne sommes malheureusement pas en mesure de rendre publique une telle version.<br><a href="/blog/what-about-the-french-version-quen-est-il-de-la-version-francaise/">Lire la suite...</a></p>
+					</div>
+				</div>
+               
+                <div class="info-block">
+					<div class="details">
+						<h3 class="title">About This Site</h3>
+						<p class="desc">This site was built using <a href="https://www.python.org/Python">Python</a>, <a href="https://www.djangoproject.com/">Django</a>, <a href="http://getuikit.com/">UIKit</a>, <a href="http://www.postgresql.org/">PostgreSQL</a>, and <a href="http://django-haystack.readthedocs.org/">Haystack/Solr</a> by <a href="http://twhyte.net">twhyte.net</a>.</p>
+                <p class="desc">It also makes use of the <a href="http://api.openparliament.ca/api/">openparliament.ca API</a> developed and maintained by Michael Mulley.</p>
+                <p class="desc">Complete source code is available at <a href="https://github.com/twhyte/dilipad">GitHub</a>. A current list of dataset bugs is available on our <a href="/help/#bugs">Help page</a>.</p>
+					</div>
+				</div>
+
+                
+            <div class="info-block">
+					<div class="details">
+						<h3 class="title">About us</h3>
+						<p class="desc">We are a group of political scientists, computer scientists, and historians at the University of Toronto.</p><p class="desc">Kaspar Beelen is a postdoctoral fellow in the Departments of Political Science and Computer Science; Christopher Cochrane is an Associate Professor in the Department of Political Science; Graeme Hirst is a Professor in the Department of Computer Science; Nona Naderi is a Ph.D. student in the Department of Computer Science;Ludovic Rheault is an Assistant Professor in the Department of Political Science;and Tanya Whyte is a Ph.D. student in the Department of Political Science.</p>
+					</div>
+				</div>
+				
+			</div>
+			
+
+			
+			<div class="column-6">
+
+
+                <div class="info-block">
+					<div class="details">
+						<h3 class="title">What about the French version?</h3>
+						<p class="desc">Digitizing the French version of the Hansard is a priority for our research team.  Unfortunately, we are not able to release it at this time.<br><a href="/blog/what-about-the-french-version-quen-est-il-de-la-version-francaise/">Read more...</a></p>
+					</div>
+					</div>
+
+                
+                <div class="info-block">
+					<div class="details">
+						<h3 class="title">Acknowledgements</h3>
+                        <p class="desc">This project was made possible through financial support from the Social Sciences and Humanities Research Council, the National Sciences and Engineering Research Council, and the Digging into Data initiative.</p><p class = "desc">We are grateful to a number of colleagues who have provided helpful advice and feedback about this project.  These include <a href="http://www.history.ac.uk/about/jonathan-blaney">Jonathan Blaney (University of London)</a>; <a href="http://www.kcl.ac.uk/artshums/depts/ddh/people/academic/gartner/index.aspx">Richard Gartner (King’s College, London)</a>; <a href="http://humanities.uva.nl/~kamps/">Jaap Kamps (University of Amsterdam)</a>; <a href="http://maartenmarx.nl/">Maarten Marx (University of Amsterdam)</a>; <a href="http://www.historyofparliamentonline.org/about/staff/dr-paul-seaward-0">Paul Seaward (History of Parliament)</a>; <a href="http://www.history.ac.uk/about/jane-winters">Jane Winter (University of London)</a>. We have also benefited from the outstanding research assistance of Michael Kimms, Roman Polyanovsky, and Tim Alberdingk Thijm.</p>
+<p class="desc">
+Although this project is much improved from the support of our funders and our colleagues, we assume full responsibility for the remaining errors.
+</p>
+					</div>
+				</div>
+                
+			</div>
+		</div>
+
+	</section>
+
+
+<section id="blog" class="splash">
+
+		<div class="wrapper">
+			<div class="plan-breakdown">
+				<div class="plan column-12">
+                    <h4 class="title xl teal">Latest News</h4>
+                    
+                    <div class="column-12 extramargin">
+                
+					<h5 class="subtitle extramargin">{{ blog.published_timestamp|date:"F j, Y" }} | {{ blog.title }}</h5>
+                    
+					<div class="details sfont">{{ blog.content|truncatewords_html:250 }}</div><br>
+					<a href="{{ blog.get_absolute_url }}" class="uk-button uk-button-primary" style="color:white;">Read More</a>
+				</div>
+			</div>
+		</div>
+            </div>
+	</section>
+	
+
+	<footer>
+		<div class="wrapper">
+			<div class="column-6">
+				<a href="#" class="logo"><img src='{% static "home/images/logoalt.png" %}'/></a>
+				<h4 class = "no-margin">Linked Parliamentary Data</h4>
+			</div>
+			<div class="column-3">
+				<h4 class="footer-header">Explore the Canadian Hansard</h4>
+				<ul>
+                    <li class="footer-li"><a class = "footer-a footermenulink" href="/search/"><i class="fa fa-search"></i>  Search</a></li>
+					<li class="footer-li"><a class = "footer-a footermenulink" href="/full/"><i class="fa fa-calendar"></i>  Timeline</a></li>
+					<li class="footer-li"><a class = "footer-a footermenulink" href="/data/"><i class="fa fa-archive"></i>  Data</a></li>
+					<li class="footer-li"><a class = "footer-a footermenulink" href="/help/"><i class="fa fa-question"></i>  Help</a></li>
+				</ul>
+			</div>
+			<div class="column-3">
+				<h4 class="footer-header">Site Info</h4>
+				<ul>
+                    <li class="footer-li"><a class = "footer-a footermenulink" href="/#about"><i class="fa fa-info"></i>  About</a></li>
+					<li class="footer-li"><a class = "footer-a footermenulink" href="/help/#sitemap"><i class="fa fa-globe"></i>  Site Map</a></li>
+					<li class="footer-li"><a class = "footer-a footermenulink" href="/blog/"><i class="fa fa-commenting"></i>  Blog</a></li>
+					<li class="footer-li"><a class = "footer-a footermenulink" href="/contact/"><i class="fa fa-envelope"></i>  Contact</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="footer-bar">
+			<div class="wrapper">
+				<div class="column-12">
+                    <span class="copyright">© 2016 University of Toronto <br>additional data sourced from <a href="http://www.lop.parl.gc.ca/ParlInfo/">ParlINFO</a>, <a href="http://www.openparliament.ca/">openparliament.ca</a> and <a href="http://www.canadiana.ca/en/home/">Canadiana.org</a></span>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+{% endblock base_body %}
