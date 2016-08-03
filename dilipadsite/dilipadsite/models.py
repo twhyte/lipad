@@ -14,6 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist as DoesNotExist
 from picklefield.fields import PickledObjectField
 from django.contrib.auth.models import User
 from caching.base import CachingManager, CachingMixin
+import datetime
 
 class Blogger(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -23,8 +24,8 @@ class Blogger(models.Model):
 
 class party(models.Model):
     partyid = models.IntegerField(primary_key=True)
+    partyref = models.TextField(blank=True, null=True)
     name = models.CharField(max_length=256)
-    partyref = models.CharField(max_length=90, blank = True, null = True)
     abbrev = models.CharField(max_length=12)
     colour = models.CharField(max_length=12)
     wiki = models.CharField(max_length=325)
@@ -38,9 +39,37 @@ class party(models.Model):
     def get_party_abbrev(self):
         return self.abbrev
 
+    def get_party_textcolour(self): 
+        hexy = self.colour
+        red = int(hexy[1:3], 16)
+        green = int(hexy[3:5], 16)
+        blue = int(hexy[5:7], 16)
+
+        if (red*0.299 + green*0.587 + blue*0.114) > 186:
+            return('#000000')
+        else:
+            return('#ffffff')
+
+class position(models.Model):
+    posid = models.AutoField(primary_key=True)
+    pid = models.ForeignKey('member')
+    positionname = models.TextField(blank=True, null=True)
+    startdate = models.DateField(blank=True, null=True)
+    enddate = models.DateField(blank=True, null=True)
+    
 class datePickle(CachingMixin, models.Model):
     fullmap = PickledObjectField()
     objects = CachingManager()
+
+class parlsess(CachingMixin, models.Model):
+    parlsessid = models.CharField(max_length=8, primary_key=True)
+    name = models.TextField()
+    startdate=models.DateField(db_index=True)
+    enddate=models.DateField(db_index=True, blank=True, null=True)
+    parlnum = models.IntegerField()
+    sessnum = models.IntegerField()
+    duration = models.IntegerField()
+    housesittings = models.IntegerField()
 
 class datenav(CachingMixin, models.Model):
     hansarddate = models.DateField(primary_key=True)
@@ -66,13 +95,16 @@ class datenav(CachingMixin, models.Model):
         return self.year
 
     def get_month(self):
-        if len(month)<=1:
+        if len(str(self.month))<=1:
             return "0"+str(self.month)
         else:
             return str(self.month)
 
     def get_day(self):
-        return self.day
+        if len(self.day)<=1:
+            return "0"+str(self.day)
+        else:
+            return str(self.day)
 
     def get_years_list(self):
         return datenav.objects.filter(decade=self.decade).order_by('speechdate').values_list('year', flat=True).distinct()
@@ -131,39 +163,93 @@ class datenav(CachingMixin, models.Model):
 ##            daysDict[result]=
 ##            
 
-class mp(models.Model):
-    mp_pid = models.CharField(max_length=256, primary_key=True) # parlinfo member hash
-    mp_dpid = models.TextField(blank=True, null=True) # our dilipad numbering system, ie. ca.m.64
-    mp_opid = models.TextField(blank=True, null=True) # open parliament-style member ID
-    firstname = models.CharField(max_length=256)
-    lastname = models.CharField(max_length=256)
-    fulltitle = models.TextField(blank=True, null=True)
-    gender = models.CharField(max_length=12,blank=True, null=True)
-    current_mp = models.BooleanField()
-    parlinfourl = models.TextField(blank=True, null=True)
-    parlgcurl = models.TextField(blank=True, null=True)
-    personalurl = models.TextField(blank=True, null=True)
-    titlelist = models.TextField(blank=True, null=True)
-    dob = models.DateField(blank=True, null=True)
-    dod = models.DateField(blank=True, null=True)
-    professions = models.TextField(blank=True, null=True)
-    biography = models.TextField(blank=True, null=True)
-    email_address = models.TextField(blank=True, null=True)
 
+class member(models.Model):
+    pid = models.CharField(max_length=128, primary_key=True) # parlinfo member hash
+    firstname = models.TextField(db_index=True)
+    lastname = models.TextField(db_index=True)
+    fulltitle = models.TextField(blank=True, null=True)
+    gender = models.CharField(max_length=12, blank=True, null=True)
+    profession = models.TextField(blank=True, null=True)
+    website = models.TextField(blank=True, null=True)
+    emailaddress = models.TextField(blank=True, null=True)
+    birthdate = models.DateField(blank=True, null=True)
+    deceaseddate = models.DateField(blank=True, null=True)
+    speakerurl = models.TextField(blank=True, null=True)
+    op_slug = models.TextField(blank=True, null=True, db_index=True)
+    
     def get_full_name(self):
         return (self.firstname + " " +self.lastname)
 
-class membership(models.Model):
-    '''a membership object is an elected instance: of member, party, and riding
-    Direct import from constituency_file.tsv for older members'''
-    membership_id = models.AutoField(primary_key=True)
-    membership_pid = models.ForeignKey(mp) # parlinfo member hash
-    startdate = models.DateField()
-    enddate = models.DateField()
-    partyname = models.TextField(blank=True, null=True)
-    partyref = models.TextField(blank=True, null=True)
-    riding = models.TextField(blank=True, null=True)
+    def get_member_url(self):
+        return 
+
+    def get_static_img(self):
+        '''Returns staticfile location of person's hosted picture
+        If blank, links to a generic placeholder.'''
+        pid = self.pid
+        if pid == "":
+            return ("dilipadsite/polimages/"+'unknown'+".png")
+        elif pid is None:
+            return ("dilipadsite/polimages/"+'unknown'+".png")
+        elif pid == 'unmatched':
+            return ("dilipadsite/polimages/"+'unknown'+".png")
+        else:
+            return ("dilipadsite/polimages/"+pid+".jpg")
+
+    def get_personal_site(self):
+        site = self.website
+        if site is None:
+            return ("http://www.parl.gc.ca/parlinfo/Files/Parliamentarian.aspx?Item="+self.pid+"&Language=E&Section=ALL")
+        elif site=="":
+            return ("http://www.parl.gc.ca/parlinfo/Files/Parliamentarian.aspx?Item="+self.pid+"&Language=E&Section=ALL")
+        else:
+            return site
+    
+class constituency(models.Model):
+    '''a constituency object is an elected instance: of member, party, and riding'''
+    cid = models.AutoField(primary_key=True)
+    riding = models.TextField(blank=True, null=True, db_index=True)
     province = models.TextField(blank=True, null=True)
+    pid = models.TextField(blank=True, null=True, db_index=True)
+    partyid = models.ForeignKey('party')
+    startdate = models.DateField(blank=True, null=True)
+    enddate = models.DateField(blank=True, null=True)
+
+    def get_riding(self):
+        return self.riding
+
+    def get_position(self):
+        '''Returns the position(s) that were held during this constituency period
+        by this politician.'''
+        position_list = []
+        
+        qs = position.objects.filter(pid=member.objects.get(pid=self.pid)).order_by('startdate')
+
+        cs = self.startdate
+        ce = self.enddate
+
+        if ce is None:
+            ce = datetime.datetime.now().date()
+            
+        for pos in qs:
+            ps = pos.startdate
+            pe = pos.enddate
+            if pe is None:
+                pe = datetime.datetime.now().date()
+
+            if ps >= cs:
+                if pe <= ce:
+                    position_list.append(pos)
+                elif ps <  ce and pe > ce:
+                    position_list.append(pos)
+            if ps < cs:
+                if pe > cs and pe <= ce:
+                    position_list.append(pos)
+                elif pe >= ce:
+                    position_list.append(pos)
+        return(position_list)
+            
 
 class basehansard(CachingMixin, models.Model):
     '''base class for one statement made in the house of commons'''
@@ -181,7 +267,7 @@ class basehansard(CachingMixin, models.Model):
     speakerparty = models.TextField(blank=True, null=True, db_index=True)
     speakerriding = models.TextField(blank=True, null=True, db_index=True)
     speakername = models.TextField(blank=True, null=True, db_index=True)
-    speakerurl = models.TextField(blank=True, null=True, db_index=True)
+    speakerurl = models.TextField(blank=True, null=True)
 
     objects = CachingManager()
 
@@ -198,6 +284,13 @@ class basehansard(CachingMixin, models.Model):
     def is_subtopic(self):
         '''is this a subtopic?  used for formatting check'''
         if self.speakerposition=="subtopic":
+            return True
+        else:
+            return False
+
+    def is_modern(self):
+        '''is this a post-dilipad speech?'''
+        if self.speechdate >= datetime.date(1993,6,24):
             return True
         else:
             return False
@@ -232,18 +325,14 @@ class basehansard(CachingMixin, models.Model):
         except:
             return ("#777777")
 
-
-    def get_party_textcolour(self):
-        hexy = self.get_party_colour()
-        red = int(hexy[1:3], 16)
-        green = int(hexy[3:5], 16)
-        blue = int(hexy[5:7], 16)
-
-        if (red*0.299 + green*0.587 + blue*0.114) > 186:
-            return('#000000')
-        else:
-            return('#ffffff')
-
+    def get_party_textcolour(self):  # should remove this since it's now in party
+        try:
+            x = party.objects.get(name=self.speakerparty)
+            return x.get_party_textcolour()
+        
+        except:
+            return ("#ffffff")
+        
     def get_party_abbrev(self):
         try:
             x = party.objects.get(name=self.speakerparty)
@@ -263,6 +352,12 @@ class basehansard(CachingMixin, models.Model):
             return x
         else:
             return ("("+x+")")
+
+    def get_member_link(self):
+        if self.pid is not None:
+            return ("/members/record/"+self.pid+"/1/")
+        else:
+            return ("")
 
     def get_parlinfo_url(self):
         '''Returns parlinfo URL of person with this ID'''

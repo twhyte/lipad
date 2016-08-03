@@ -18,3 +18,6 @@ class BaseHansardIndex(indexes.SearchIndex, indexes.Indexable):
     
     def get_model(self):
         return basehansard
+
+    def get_updated_field(self):
+        return('speechdate')

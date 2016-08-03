@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from dilipadsite.models import *
 
 class Command(BaseCommand):
-    help = 'populates a model datenav containing a date list of all hansarddays, creates the full dictionary, and pickles'
+    help = 'clears rows with no content created by openparliament scrape'
 
     def handle(self, *args, **options):
         basehansard.objects.filter(opid__isnull=True,pid__isnull=True,

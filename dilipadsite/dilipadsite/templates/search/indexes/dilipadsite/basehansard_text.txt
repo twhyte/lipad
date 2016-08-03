@@ -1,6 +1,6 @@
-{{ object.speakername }}
-{{ object.speakerparty }}
-{{ object.speakerriding }}
-{{ object.speechtext }}
-{{ object.maintopic }}
-{{ object.subtopic }}
+{{ object.speakername|safe }}
+{{ object.speakerparty|safe }}
+{{ object.speakerriding|safe }}
+{{ object.speechtext|safe }}
+{{ object.maintopic|safe }}
+{{ object.subtopic|safe }}

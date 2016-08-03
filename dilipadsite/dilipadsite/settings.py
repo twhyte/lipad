@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'dilipadsite',
     'django_contactme',
     'home',
+    'static_sitemaps',
     'data',
     'search',
     'full',
@@ -214,15 +215,15 @@ LOGGING = {
     },
     'handlers': {
         'default': {
-            'level':'DEBUG',
+            'level':'ERROR',
             'class':'logging.FileHandler',
-            'filename': 'filename1.log',
+            'filename': 'django.log',
             'formatter':'standard',
         },  
         'request_handler': {
-                'level':'DEBUG',
+                'level':'ERROR',
                 'class':'logging.FileHandler',
-                'filename': 'filename2.log',
+                'filename': 'django.log',
                 'formatter':'standard',
         },
     },
@@ -230,13 +231,14 @@ LOGGING = {
 
         '': {
             'handlers': ['default'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': True
         },
         'django.request': {
             'handlers': ['request_handler'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': False
         },
     }
 }
+
