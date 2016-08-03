@@ -4,9 +4,7 @@
 
 {% load widget_tweaks %}
 
-{% block head_js %}
-
-{% endblock head_js %}
+{% block title %}Lipad - {{ hansard.1.speechdate|date:"F j, Y" }} - Browse the Canadian House of Commons{% endblock title %}
 
 {% block base_body %}
 
@@ -173,16 +171,21 @@
                              <article class="uk-comment">
                                  {% if not result.is_stagedirection %}
                                 <header class="uk-comment-header">
-                                        <h3 class="uk-margin-bottom-remove">{{ result.speakername }} {{ result.get_display_speakerposition }}</h3>
+                                        <h3 class="uk-margin-bottom-remove">{{ result.speakername }} 
+                                        {% if not result.is_modern %}{{ result.get_display_speakerposition }}{% endif%}</h3>
 
                                 {% if not result.pid == 'intervention' %}
+                                       {% if result.speakerparty %}
                                         <strong><h3 class="uk-comment-title uk-margin-top-remove uk-margin-bottom"> {{ result.speakerparty }}</h3></strong>
                                     <div class="uk-button-group uk-float-left">
-                                
-                                <a class="uk-button uk-button-mini" href="{{ result.get_parlinfo_url }}">Member Biography</a>
-                                <a class="uk-button uk-button-mini" href="{{ result.get_party_url }}">Party Information</a>
+                                    
+                                        
+                                    
+                                <a class="uk-button uk-button-mini" href="{{ result.get_member_link }}">Member File</a>
+                                <a class="uk-button uk-button-mini" href="{{ result.get_parlinfo_url }}">Biography @ PARLINFO</a>
                                        
                                        </div>
+                                    {% endif %}
                                         {% endif %}
 
                                 

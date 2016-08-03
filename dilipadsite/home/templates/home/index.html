@@ -22,7 +22,7 @@
 					<li class="sprd"><a href="/blog/"><span>Blog</span></a></li>
 					<li class="sprd"><a href="/contact/"><span>Contact</span></a></li>
 				</ul>
-			</nav>	
+			</nav>
 		</div>		
 	</header>
 	<section id="home" class="splash-page splash">
@@ -32,7 +32,15 @@
                 <p class="animate-from-bottom white">Search the Canadian Hansard from 1901 to today.</p>
                     <form id = "search" action="/search/" method="get">
                         <input id="searchfield" name="q" type="text">
-                        <input id="searchsubmit" type="submit" value="Search">
+                        <input id="searchsubmit" class = "safarifix" type="submit" value="Search">
+                        <input type="hidden" name="sd_year" value="1901">
+                        <input type="hidden" name="sd_month" value="1">
+                        <input type="hidden" name="sd_day" value="1">
+                        <input type="hidden" name="ed_year" value='{% now "Y" %}'>
+                        <input type="hidden" name="ed_month" value='{% now "n" %}'>
+                        <input type="hidden" name="ed_day" value='{% now "j" %}'>
+                        <input type="hidden" name="pol" value="">
+                        <input type="hidden" name="par" value="">
                     </form>
                 <a href="/search/"><span>Advanced Search...</span></a>
                 </div>
@@ -56,7 +64,7 @@
             <div class="column-12"><div class="info-block"><div class="details">
                 <p class = "desc">The transcript of Parliamentary Debates (“Hansard”) is a 150-year running record of Canadian political history.  This richness presents political historians with a needle-in-a-haystack problem of an enormous magnitude.  At a rate of a novel’s worth of reading each day, it would take <em>27 years</em> to read the 680 million words of Hansard.  It would take a further 6 years to read what was added in the interim.</p><br></div></div>
 				
-                <div class="info-block"><div class="details"><p class = "desc">In 2013, a group of political scientists, computer scientists, and historians teamed up at the University of Toronto to solve this problem.  With support from the SSHRC, the NSERC, the Digging into Data initiative, the Library of Parliament, <a href="http://www.canadiana.ca/en/home">Canadiana.org</a>, and Michael Mulley at <a href="https://openparliament.ca/">openparliament.ca</a>, a key output of this collaboration is the first machine-readable and fully searchable historical Hansard.  We have linked to these data to various biographical properties of parliamentarians, including their party and gender.  This corpus underpins the search interface of this website.</p><br></div></div>
+                <div class="info-block"><div class="details"><p class = "desc">In 2013, a group of political scientists, computer scientists, and historians teamed up at the University of Toronto to solve this problem.  With support from the SSHRC, the NSERC, the Digging into Data initiative, the Library of Parliament, Library and Archives Canada, <a href="http://www.canadiana.ca/en/home">Canadiana.org</a>, and Michael Mulley at <a href="https://openparliament.ca/">openparliament.ca</a>, a key output of this collaboration is the first machine-readable and fully searchable historical Hansard.  We have linked to these data to various biographical properties of parliamentarians, including their party and gender.  This corpus underpins the search interface of this website.</p><br></div></div>
 
 <div class="info-block"><div class="details"><p class = "desc">We are continuously expanding this corpus and features on this website.  We are adding the Debates of the Senate and the transcripts of parliamentary committees.  We are also integrating more and more information about parliamentarians, including information about the demographic profiles and election outcomes in their constituencies.  To request data or for information about how to get involved in this project, please <a href="/contact/">contact us.</a>
     </p><br></div></div>
@@ -83,7 +91,7 @@
 						<h3 class="title">About This Site</h3>
 						<p class="desc">This site was built using <a href="https://www.python.org/Python">Python</a>, <a href="https://www.djangoproject.com/">Django</a>, <a href="http://getuikit.com/">UIKit</a>, <a href="http://www.postgresql.org/">PostgreSQL</a>, and <a href="http://django-haystack.readthedocs.org/">Haystack/Solr</a> by <a href="http://twhyte.net">twhyte.net</a>.</p>
                 <p class="desc">It also makes use of the <a href="http://api.openparliament.ca/api/">openparliament.ca API</a> developed and maintained by Michael Mulley.</p>
-                <p class="desc">Complete source code is available at <a href="https://github.com/twhyte/dilipad">GitHub</a>. A current list of dataset bugs is available on our <a href="/help/#bugs">Help page</a>.</p>
+                <p class="desc">Complete source code is available at <a href="https://github.com/twhyte/lipad">GitHub</a>. A current list of dataset bugs is available on our <a href="/help/#bugs">Help page</a>.</p>
 					</div>
 				</div>
 
@@ -174,7 +182,7 @@ Although this project is much improved from the support of our funders and our c
 		<div class="footer-bar">
 			<div class="wrapper">
 				<div class="column-12">
-                    <span class="copyright">© 2016 University of Toronto <br>additional data sourced from <a href="http://www.lop.parl.gc.ca/ParlInfo/">ParlINFO</a>, <a href="http://www.openparliament.ca/">openparliament.ca</a> and <a href="http://www.canadiana.ca/en/home/">Canadiana.org</a></span>
+                    <span class="copyright">© 2016 University of Toronto <br>additional data sourced from <a href="http://www.lop.parl.gc.ca/ParlInfo/">ParlINFO</a>, <a href="http://www.openparliament.ca/">openparliament.ca</a>, Library and Archives Canada and <a href="http://www.canadiana.ca/en/home/">Canadiana.org</a></span>
 				</div>
 			</div>
 		</div>

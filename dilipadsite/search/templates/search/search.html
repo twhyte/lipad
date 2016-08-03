@@ -8,6 +8,12 @@
 
 {% load full_extras %}
 
+{% if query %}
+
+{% block title %}Lipad - {{ query }} - Search the Canadian House of Commons Hansard{% endblock title %}
+
+{% endif %}
+
 {% block base_body %}
 
 {% block content %}
@@ -56,7 +62,7 @@
 <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1 uk-margin-large-bottom">
                     <h1 class="uk-heading-large">Advanced Search</h1>
-                    <p class="uk-text-large">Search within full text, speaker names, parties, and speech topics of Hansard proceedings.</p>
+                    <p class="uk-text-large">Search within full text, speaker names, parties, and topics of Hansard proceedings.</p>
                     
                     <div class="uk-width-medium-1-1">
                         <form class = "uk-form" method = "get" action = "." >
@@ -187,16 +193,21 @@
                              <article class="uk-comment">
                                  {% if not result.object.is_stagedirection %}
                                 <header class="uk-comment-header">
-                                        <h3 class="uk-margin-bottom-remove">{{ result.object.speakername }} {{ result.object.get_display_speakerposition }}</h3>
-                                        
-                                        
-                                        {% if not result.object.pid == 'intervention' %}
+                                       <h3 class="uk-margin-bottom-remove">{{ result.object.speakername }} 
+                                        {% if not result.object.is_modern %}{{ result.object.get_display_speakerposition }}{% endif %}</h3>
+
+                                {% if not result.pid == 'intervention' %}
+                                       {% if result.speakerparty %}
                                         <strong><h3 class="uk-comment-title uk-margin-top-remove uk-margin-bottom"> {{ result.object.speakerparty }}</h3></strong>
                                     <div class="uk-button-group uk-float-left">
-                                <a class="uk-button uk-button-mini" href="{{ result.object.get_parlinfo_url }}">Member Biography</a>
-                                <a class="uk-button uk-button-mini" href="{{ result.object.get_party_url }}">Party Information</a>
+                                    
+                                        
+                                    
+                                <a class="uk-button uk-button-mini" href="{{ result.object.get_member_link }}">Member File</a>
+                                <a class="uk-button uk-button-mini" href="{{ result.object.get_parlinfo_url }}">Biography @ PARLINFO</a>
                                        
                                        </div>
+                                    {% endif %}
                                         {% endif %}
 
                                 

@@ -1,27 +1,35 @@
 from django.contrib.sitemaps import Sitemap
-from dilipadsite.models import datenav, basehansard
+from dilipadsite.models import datenav, basehansard, member
 from django.contrib.sitemaps import GenericSitemap
 from andablog.models import Entry
+from django.core.urlresolvers import reverse
+import datetime
+
+class AbstractSitemapClass():
+    changefreq = 'daily'
+    url = None
+    def get_absolute_url(self):
+        return self.url
 
 class ArticleSitemap(Sitemap):
     changefreq = "weekly"
     priority = 0.5
 
     def items(self):
-        return Entry.objects.filter(is_draft=False)
+        return Entry.objects.all()
 
     def lastmod(self, obj):
-        return obj.pub_date
+        return obj.published_timestamp
 
-class SpeechSitemap(Sitemap):
-    changefreq = "daily"
-    priority = 0.6
-    
+class MemberSitemap(Sitemap):
+    changefreq = "weekly"
+    priority = 0.5
+
     def items(self):
-        return basehansard.objects.all()
+        return member.objects.all()
 
     def location(self, obj):
-        return obj.get_permalink_url()
+        return ("/members/record/"+obj.pid+"/")
 
 class DateSitemap(Sitemap):
     changefreq = "daily"
@@ -31,17 +39,25 @@ class DateSitemap(Sitemap):
         return datenav.objects.all()
 
     def location(self, obj):
-        return obj.get_fullurl()
+        return obj.get_fullurl(obj.get_year(),obj.get_month(),obj.day)
 
-class StaticViewSitemap(Sitemap):
-    priority = 0.5
-    changefreq = 'weekly'
+class StaticViewSitemap(Sitemap):  
+    pages = {
+             'home':'/', #Add more static pages here like this 'example':'url_of_example',
+             'data':'/data/',
+             'help':'/help/',
+             }
+    main_sitemaps = []
+    for page in pages.keys():
+        sitemap_class = AbstractSitemapClass()
+        sitemap_class.url = pages[page]        
+        main_sitemaps.append(sitemap_class)
 
     def items(self):
-        return ['data', 'help', 'home']
-
-    def location(self, item):
-        return reverse(item)
+        return self.main_sitemaps    
+    lastmod = datetime.datetime(2016, 7, 22)   #Enter the year,month, date you want in yout static page sitemap.
+    priority = 1
+    changefreq = "monthly"   
 
 class EntrySitemap(Sitemap):
     """

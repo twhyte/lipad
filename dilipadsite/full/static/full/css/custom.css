@@ -60,7 +60,7 @@ font-weight: 600;
 
 
 .lightgreen{
-  background: #8fc0a9;!important
+  background: #79a784;!important
     color:#fff;
     
 }
@@ -90,8 +90,8 @@ footer {
     font-family:"Alegreya Sans",Helvetica, Arial, sans-serif !important;
   width: 100%;
   display: block;
-  background: #8fc0a9;
-  border-top: 4px solid #97cab2; }
+  background: #79a784;
+  border-top: 4px solid #7eb48a; }
   footer:after {
     content: "";
     display: table;

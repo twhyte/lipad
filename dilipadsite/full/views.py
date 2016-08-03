@@ -5,12 +5,12 @@ from django.core.paginator import InvalidPage, Paginator
 from django.shortcuts import get_object_or_404, render, render_to_response, redirect
 from django.template import RequestContext
 from dilipadsite.models import basehansard, datenav, datePickle
-from dilipadsite.views import streaming_csv
 from natsort import natsorted
 import datetime, operator
 import calendar
 import unicodecsv as csv
 from django.utils.six.moves import range
+from django.db import connection
 from django.http import StreamingHttpResponse
 from django.template import Context, loader
 from django.http import HttpResponse, Http404
@@ -18,9 +18,13 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist as DoesNotExist
 from digg_paginator import DiggPaginator
 
-# most recent hansard
 
-# explore by year
+class Echo(object):
+    """An object that implements just the write method of the file-like interface.
+    """
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
 
 def index(request):
     timeline = datePickle.objects.all()[0].fullmap
@@ -110,12 +114,18 @@ def hansard_view(request, year, month, day, pageno):
     d=int(day)
     dateobj = datetime.date(y,m,d)
     
-    qs = basehansard.objects.filter(speechdate=dateobj).order_by('basepk').all()
+    qs = basehansard.objects.raw("select * from dilipadsite_basehansard where speechdate = %s order by basepk", [dateobj])
+
+    def items_count():
+        cursor = connection.cursor()
+        cursor.execute("select count(*) from dilipadsite_basehansard where speechdate = %s", [dateobj])
+        row = cursor.fetchone()
+        return row[0]
     
     paginator = DiggPaginator(qs, 20, body=5, tail=2, padding=2)
-    thisday = qs[1].speechdate
-    
-    datenavobject = datenav.objects.get(hansarddate=thisday)
+    paginator._count = items_count()
+
+    datenavobject = datenav.objects.get(hansarddate=dateobj)
     
     storage = messages.get_messages(request)
 
@@ -168,9 +178,33 @@ def full_csv_export_view(request, year, month, day):
     m=int(month)
     d=int(day)
     dateobj = datetime.date(y,m,d)
-    qs = basehansard.objects.filter(speechdate=dateobj).order_by('basepk').all()
+    qs = basehansard.objects.filter(speechdate=dateobj).all()
     filename = "proceedings"+str(year)+"_"+str(month)+"_"+str(day)
-    return streaming_csv(request, qs, filename)
+    model_fields = qs.model._meta.fields
+    headers = [field.name for field in model_fields]
+
+    def get_row(obj):
+        row = []
+        for field in model_fields:
+            val = getattr(obj, field.name)
+            row.append(val)
+        return(row)
+
+    def stream(headers,data):
+        if headers:
+            yield headers
+        for obj in data:
+            yield get_row(obj)
+
+    pseudo_buffer = Echo()
+    writer=csv.writer(pseudo_buffer)
+    response = StreamingHttpResponse(
+    (writer.writerow(row) for row in stream(headers, qs)),
+    content_type="text/csv")
+    response['Content-Disposition'] = ('attachment;filename=%s.csv' % filename)
+    #messages.success(request, 'Export successful! Please wait for your file to begin downloading.')
+    return (response)
+
 
 def permalink_view(request, pk):
     """Permalink to basepk"""

@@ -18,7 +18,8 @@ urlpatterns = [
 
     url(r'^$', views.index, name='index'),
     url(r'^map/$', views.polmap, name='polmap'),
-    url(r'^record/$', views.record, name='record'),
+    url(r'^record/(?P<memberpid>([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12})/(?P<pageno>[0-9]+)/$', views.record, name='record'),
+    url(r'^record/(?P<memberpid>([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12})/exportcsv/$', views.record_csv_export_view),
    
 
 ]

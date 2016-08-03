@@ -4,7 +4,11 @@
 
 {% load widget_tweaks %}
 
+{% block title %}Lipad - {{ member.get_full_name }} - Members of the Canadian House of Commons{% endblock title %}
+
 {% block base_body %}
+
+{% load members_extras %}
 
 {% block content %}
     
@@ -54,63 +58,116 @@
        
                    <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-1-1">
-                    <h1 class="uk-heading-large">Mackenzie King</h1>
+                    <h1 class="uk-heading-large">{{ member.get_full_name }}</h1>
                 </div>
             </div>
             
             
             <div class="uk-grid" data-uk-grid-margin>
                
-               <div class="uk-width-large-1-5 uk-width-small-1-1">
-               <div class = "uk-panel uk-panel-box">
+               <div class="uk-width-large-1-1 uk-width-small-1-1">
+               <div class = "uk-panel uk-panel-box uk-padding-bottom panelshadow">
                
                 <div class="uk-grid">
                
-               <div class="uk-width-1-1">
+               <div class="uk-width-large-1-5 uk-width-small-1-1">
+               <div class = "uk-panel uk-panel-box uk-panel-box-secondary">
                
-               <center><h3>Right Honourable Super William Lyon Mackenzie King</h3></center>
-                </div>
-                
-                
-                
-               <img class = "uk-align-center uk-margin" src="http://www.lipad.ca/static/dilipadsite/polimages/b11f5b30-7d32-44e6-b23c-a24561c1eaf5.jpg">
-               
+               <img class = "pol-image uk-align-center uk-margin-bottom" src='{% static member.get_static_img %}' >
+                   
+                   
+                    <center><h3>{{ member.fulltitle }}</h3></center>
+                   
+                   </div>
+
                    </div>
                    
-                   <div class="uk-width-1-1">
+                   <div class="uk-width-large-4-5 uk-width-small-1-1">
 
                    <div class = "uk-panel uk-panel-box uk-panel-box-secondary">
+                   
+                       <h2 class="uk-panel-title uk-panel-header topictext">Personal Data</h2>
                    
                    
                
                 <dl class="uk-description-list-line">
                     <dt>Party</dt>
-                    <dd>Liberal</dd>
-                    <dt>Date of Birth</dt>
-                    <dd>October 1, 1986</dd>
-                    <dt>Gender</dt>
-                    <dd>Male</dd>
-                    <dt>Occupation</dt>
-                    <dd>Bolster</dd>
+                    <dd><a href="{{ lastparty.get_party_url }}">{{ lastparty.name }}</a></dd>
+                    <dt>Constituency</dt>
+                    <dd>{{ lastconstituency.riding }} ({{ lastconstituency.province }})</dd>
+                    {% if member.birthdate %}
+                    <dt>Birth Date</dt>
+                    <dd>{{ member.birthdate|date:"F j, Y" }}</dd>
+                    {% endif %}
+                    {% if member.deceaseddate %}
+                    <dt>Deceased Date</dt>
+                    <dd>{{ member.deceaseddate|date:"F j, Y" }}</dd>
+                    {% endif %}
+                    <dt>Website</dt>
+                    <dd><a href="{{ member.get_personal_site }}">{{ member.get_personal_site }}</a></dd>
+                    {% if member.emailaddress %}
+                    <dt>Email Address</dt>
+                    <dd><a href="mailto:{{ member.emailaddress }}">{{ member.emailaddress }}</a></dd>
+                    {% endif %}
+                    {% if member.profession %}
+                    <dt>Profession</dt>
+                    <dd>{{ member.profession|prof_fix }}
+                    </dd>
+                    {% endif %}
                 
                 </dl>
                
                
                </div>
+                  
+                    </div>
+                    
+                    <div class="uk-width-large-1-1 uk-width-small-1-1 uk-margin-top">
+                    
+                   
+                    <div class = "uk-panel uk-panel-box uk-panel-box-secondary">
+                   
+                   <h2 class="uk-panel-title uk-panel-header topictext">Parliamentary Career</h2>
+                   <dl class="uk-description-list-line">
+                       {% for riding in ridings %}
+                    <dt>{{ riding.startdate|date:"F j, Y" }} - {{ riding.enddate|date:"F j, Y" }}</dt>
+                    <dd><div class="uk-badge" style ='background: {{ riding.partyid.get_party_colour }}; color:{{ riding.partyid.get_party_textcolour }};'>{{ riding.partyid.get_party_abbrev }}</div>&nbsp;&nbsp;{{ riding.riding }} ({{ riding.province }})
+                    
+                     </dd>
+                      
+                       {% endfor %}
+                       </dl>
+                   
+                    </div>
                     </div>
                    </div>
                    </div>
+                   </div>
                 
-            <div class="uk-width-large-4-5 uk-width-small-1-1">
-            <h2>Latest Speeches</h2>
+            <div class="uk-width-large-1-1 uk-width-small-1-1 uk-margin-top">
+            
+                      <div class = "uk-grid uk-clearfloat uk-margin-bottom uk-margin-large-top" data-uk-grid-margin>
+           <div class="uk-width-large-1-2">
+            <h2>Most Recent Speeches (Page {{ page.number }} of {{ paginator.num_pages }})</h2>
+
+
+            </div>
+            <div class="uk-width-large-1-2">
+            <a href='{{ baseurl }}exportcsv/' class="uk-button uk-float-right"><i class="uk-icon-download"></i> Export Speeches to CSV</a>
+                        
+            </div>
+            
+        </div>
+            
             <hr>
              
-             <div class="uk-panel uk-panel-box panelshadow">
+                {% for result in page %}
+             <div class="uk-panel uk-panel-box panelshadow uk-margin-bottom">
                        <div class="uk-grid">
 
                        <div class="uk-width-1-1">
                        
-                       <strong><h1 class="topictext uk-panel-title uk-panel-header">February 18, 1910</h1></strong>
+                       <strong><h1 class="topictext uk-panel-title uk-panel-header">{{ result.speechdate|date:"F j, Y" }}</h1></strong>
                           
                            </div>
 
@@ -119,32 +176,30 @@
                                  
                                  <div class="uk-panel uk-panel-box uk-panel-box-secondary">
                                  
-                                 <p>Mr. PUGSLEY.</p>
+                                 <p>{{ result.speakeroldname }}</p>
                                      
             
-                                <p><i class="uk-icon-quote-left uk-icon-medium uk-align-left"></i></p><p>
-                                That this House do agree to concur in the appointment of a joint committee to consider the following matters;
-1.	The forms of bills and the best means of affording information and assistance in the consideration thereof at all stages of legislation in both Houses of parliament;
-2.	The better distribution of the work of legislation between the two Houses [DOT]
-3.	The practical operation of the provisions of the Senate and House of Commons Act, Revised Statutes of Canada, 1906, chapter 10, respecting the attendance of senators and members of the House of Commons, and the expediency of making any alterations in those provisions;
-And that Messieurs Boivin, Charters, Euler, Hudson and Millar be members of such committee on the part of the House;
-That a message be sent to the Senate informing their Honours of the above resolution;
-That the Clerk do carry the said message to the Senate.
-</p>
+                                <p><i class="uk-icon-quote-left uk-icon-medium uk-align-left"></i>
+                                
+                                    {{ result.speechtext }}
+                                
                                 </div>
 
                                 <div class="uk-float-left uk-margin-top uk-h5">
-                                  
+                                  {% if result.maintopic %}
                                    
-                                   <strong>Topic:&nbsp;&nbsp;</strong> SUPPLY.
-                                    
+                                   <strong>Topic:&nbsp;&nbsp;</strong> {{ result.maintopic }}
+                                    {% endif %}
+                                    {% if result.subtopic %}
+                                    <br><strong>Subtopic:&nbsp;&nbsp;</strong> {{ result.subtopic }}
+                                    {% endif %}
                                     
                                     </div>
 
                                <div class="uk-button-group uk-float-right uk-margin-top">
-                                <a class="uk-button uk-button-small" href="/full/1910/02/18/fullview/289578/">Full View</a>
-                                <a class="uk-button uk-button-small" href="/full/permalink/289578">Permalink</a>
-                                <button class="uk-button uk-button-small" disabled="">Report an Error</button>
+                                <a class="uk-button uk-button-small" href="{{ result.get_fullview_url }}">Full View</a>
+                                <a class="uk-button uk-button-small" href="{{ result.get_permalink_url }}">Permalink</a>
+                                <button class="uk-button uk-button-small" disabled>Report an Error</button>
 
                                 </div>
                               
@@ -154,8 +209,35 @@ That the Clerk do carry the said message to the Senate.
                                
                            </div>
                 </div>
+                
+                {% endfor %}
               
                 </div>
+                
+        <div class="uk-width-large-1-1 uk-width-small-1-1">
+        
+        <div class = "uk-block uk-align-center">
+           
+        <ul class="uk-pagination">
+        
+        {% if page.has_previous %}<li><a href="{{ baseurl }}{{ page.previous_page_number }}" class="fontfix"><</a></li>{% endif %} 
+        
+        {% for num in page.page_range %}
+        {% if not num %}<li><span class="fontfix">...</span></li>
+        {% elif pageno|stringformat:"s" == num|stringformat:"s" %}
+        <li class="uk-active"><span class="fontfix">{{ num }}</span></li>
+            {% else %}
+        <li><a href="{{ baseurl }}{{ num }}" class="fontfix">{{ num }}</a></li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if page.has_next %}<li><a href="{{ baseurl }}{{ page.next_page_number }}" class="fontfix">></a></li>{% endif %}
+        
+        </ul>
+
+              </div>
+               
+               </div>
                
                 </div>
                 

@@ -4,6 +4,8 @@
 
 {% load widget_tweaks %}
 
+{% block title %}Lipad - {{ obj.basepk }} - Permalink Speech from the Canadian House of Commons{% endblock title %}
+
 {% block base_body %}
 
 {% block content %}
@@ -79,8 +81,8 @@
                                     <div class="uk-button-group uk-float-left">
                                     
                                 {% if not obj.is_intervention %}
-                                <a class="uk-button uk-button-mini" href="{{ obj.get_parlinfo_url }}">Member Biography</a>
-                                <a class="uk-button uk-button-mini" href="{{ obj.get_party_url }}">Party Information</a>
+                                <a class="uk-button uk-button-mini" href="{{ obj.get_member_link }}">Member File</a>
+                                <a class="uk-button uk-button-mini" href="{{ obj.get_parlinfo_url }}">Biography @ PARLINFO</a>
                                         {% endif %}
 
                                 </div>

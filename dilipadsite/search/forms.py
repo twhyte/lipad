@@ -14,27 +14,32 @@ class TextSearchForm(FacetedSearchForm):
     def search(self):
 
         sqs = super(TextSearchForm, self).search()
-        
+
         if not self.is_valid():
-            return self.no_query_found()
+            return self.searchqueryset.all().exclude(speakerposition__exact="subtopic").exclude(speakerposition__exact="topic")
 
         if not self.cleaned_data.get('q'):
-            return self.no_query_found()
+            return self.searchqueryset.all().exclude(speakerposition__exact="subtopic").exclude(speakerposition__exact="topic")
 
         sqs = sqs.exclude(speakerposition__exact="subtopic").exclude(speakerposition__exact="topic")
-    
-        alt_q = AltParser("edismax", self.cleaned_data["q"],
-                          qf="speechtext^1.5 text",
-                            )
-        sqs = sqs.filter(content=alt_q)
+        
+        if self.cleaned_data.get('q'):
+            alt_q = AltParser("edismax", self.cleaned_data["q"],
+                  qf="speechtext^1.5 text",
+                    )
+
+            sqs = sqs.filter(content=alt_q)
+
+            
         #sqs = sqs.filter(text__exact=AutoQuery(self.cleaned_data['q']))
 
         if self.load_all:
             sqs = sqs.load_all()
 
         return sqs
-        
-    
+
+    def no_query_found(self):
+        return self.searchqueryset.all()
 
 class DateRangeSearchForm(TextSearchForm):
 
@@ -43,6 +48,7 @@ class DateRangeSearchForm(TextSearchForm):
     'invalid': 'Enter a valid year, month, and day.'
 }
 
+    thedate = datetime.datetime.now().date()
 
     sd = forms.DateField(widget=SelectDateWidget(years=list(range(1900,2017)), months={
     1:('Jan'), 2:('Feb'), 3:('Mar'), 4:('Apr'),
@@ -52,7 +58,7 @@ class DateRangeSearchForm(TextSearchForm):
     ed = forms.DateField(widget=SelectDateWidget(years=list(range(1900,2017)), months={
     1:('Jan'), 2:('Feb'), 3:('Mar'), 4:('Apr'),
     5:('May'), 6:('Jun'), 7:('Jul'), 8:('Aug'),
-    9:('Sep'), 10:('Oct'), 11:('Nov'), 12:('Dec')}),required=False, input_formats=['%Y-%m-%d'], error_messages = errorsdict, initial=datetime.date(2016,01,31))
+    9:('Sep'), 10:('Oct'), 11:('Nov'), 12:('Dec')}),required=False, input_formats=['%Y-%m-%d'], error_messages = errorsdict, initial=thedate)
 
     def search(self):
         # First, store the SearchQuerySet received from other processing.

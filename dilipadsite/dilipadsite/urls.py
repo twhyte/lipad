@@ -20,13 +20,14 @@ from full import urls as full_urls
 from help import urls as help_urls
 from data import urls as data_urls
 from members import urls as members_urls
-from django.contrib.sitemaps.views import sitemap
 from dilipadsite.sitemaps import *
 
+
 sitemaps = {'articles' : ArticleSitemap,
-            'speeches' : SpeechSitemap,
             'dates' : DateSitemap,
-            'staticview' : StaticViewSitemap}
+            'staticview' : StaticViewSitemap,
+            'members' : MemberSitemap}
+
 
 urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
@@ -40,6 +41,5 @@ urlpatterns = [
     url(r'^markitup/', include('markitup.urls')),
     url(r'^data/', include(data_urls), name = "data"),
     url(r'^contact/', include('django_contactme.urls')),
-    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
-        name='django.contrib.sitemaps.views.sitemap')
+    url(r'^sitemap\.xml$', include('static_sitemaps.urls'), {'sitemaps': sitemaps}),
 ]

@@ -4,6 +4,8 @@
 
 {% load widget_tweaks %}
 
+{% block title %}Lipad - Data - Browse the Canadian House of Commons{% endblock title %}
+
 {% block base_body %}
 
 {% block content %}
@@ -64,20 +66,20 @@
                 <div class="uk-panel uk-panel-box uk-panel-header">
                    <h3 class="uk-panel-title">PostgreSQL</h3>
                    <p>A complete PostgreSQL dump of the Canadian Hansard dataset, updated on the last day of each month.</p>
-                   <ul><li><a href="/media/canadianhansard.sql.gz">canadianhansard.sql.gz</a></li></ul>
+                   <ul><li><a href="/media/basehansard.sql.gz">basehansard.sql.gz</a></li></ul>
                     </div></div>
                     <div class = "uk-width-large-1-2">
                 <div class="uk-panel uk-panel-box uk-panel-header">
                 <h3 class="uk-panel-title">CSV (Comma-Separated Variable)</h3>
-                <p>Custom download of the Canadian Hansard dataset in a UTF-8 CSV file. Select a date range to download file:</p>
+                <p>Download the Canadian Hansard dataset in a UTF-8 CSV file by month. Select a month and year to download file:</p>
                               <form class = "uk-form" method="post" action =".">
                                        {% csrf_token %}
                                         <div class="uk-form-row">
-                                        <label class="uk-form-label" for="form-s-s">From:</label>
+                                        <label class="uk-form-label" for="form-s-s">Month:</label>
                                         <div class="uk-form-controls">
-                                           {{ form.sd|add_class:"uk-form" }}
-                                           {% if form.sd.errors %}
-                                            {% for error in form.sd.errors %}
+                                           {{ form.d|add_class:"uk-form" }}
+                                           {% if form.d.errors %}
+                                            {% for error in form.d.errors %}
                                             <div class="uk-alert uk-alert-danger">{{ error|escape }}</div>
                                             {% endfor %}
                                             {% endif %}
@@ -85,17 +87,6 @@
                                         </div>
                                             </div>
 
-                                    <div class="uk-form-row">
-                                        <label class="uk-form-label" for="form-s-s">To:</label>
-                                        <div class="uk-form-controls">
-                                            {{ form.ed|add_class:"uk-form" }}
-                                            {% if form.ed.errors %}
-                                            {% for error in form.ed.errors %}
-                                            <div class="uk-alert uk-alert-danger">{{ error|escape }}</div>
-                                            {% endfor %}
-                                            {% endif %}
-                                        </div>
-                                    </div>
                                     
                                     <div class="uk-form-row">
                                     <div class="uk-form-icon">

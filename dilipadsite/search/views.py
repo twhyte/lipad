@@ -2,6 +2,7 @@ from datetime import date
 from haystack.views import SearchView
 from search.forms import AdvancedSearchForm
 from digg_paginator import DiggPaginator
+from django.core.paginator import InvalidPage
 
 class AdvancedSearchView(SearchView):
 
@@ -64,7 +65,7 @@ class AdvancedSearchView(SearchView):
         try:
             page = paginator.page(page_no)
         except InvalidPage:
-            raise Http404("No such page!")
+            raise Http404("Problem with search results (no such page)!")
 
         return (paginator, page)
         
