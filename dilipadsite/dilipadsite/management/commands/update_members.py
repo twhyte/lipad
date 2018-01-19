@@ -1,5 +1,8 @@
+# coding: utf-8
+
 from django.core.management.base import BaseCommand, CommandError
 from dilipadsite.models import *
+from dilipadsite.settings import BASE_DIR
 import datetime
 import re
 import string
@@ -70,30 +73,13 @@ class PartyInstance(object):
         return "party"
 
 class Command(BaseCommand):
-    help = 'Imports all member data data from the dilipad XML data dumps, no args needed'
-
-    # Tree looks like this by default (ie. nearly identical to on the cs server, except for OP data.)
-    #
-    # canada/
-    #   ca-members/
-    #      ca.m.1.xml
-    #      ...
-    #   ca-parties/
-    #      ca.p.partynamehere.xml
-    #      ...
-    #   ca-proc/
-    #      ca.proc.d.1901-01-01.xml
-    #      ...
-    #   ca-proc-new/
-    #      ca.proc.d.19940117-1011_1994-01-01.xml
-    #      ...
-    #   constituency_file.tsv
+    help = 'Imports re-downloaded and postprocessed scraped ParlINFO files to fill in missing members'
     
     def handle(self, *args, **options):
         
-        for datadir in ["ca-members"]:
+        for datadir in ["ca-members-missing"]:
             self.importMember(datadir)
-            self.stdout.write('Successfully imported "%s"' % datadir)
+
 
     def url_open(self, url):
         return urllib2.urlopen(url)
@@ -107,45 +93,17 @@ class Command(BaseCommand):
             s += etree.tostring(child, encoding='unicode')
         return s
 
-    def fetchPolParse(self,purl):
-        fetchurl = "http://api.openparliament.ca"+purl+"/?&format=json"
-        req = urllib2.Request(fetchurl)
-        resp = self.url_open(req)
-        return json.loads(resp.read())
-
     def importMember(self, datadir):
-        '''imports ca-proc files to database basehansard objects.  There's a lot of repetition but given
-        our xml or db standard may change in the future I think it's worth keeping verbose'''
+        '''imports re-downloaded and postprocessed scraped ParlINFO files to fill in missing members and update data if necessary'''
 
         def fileLoop(file,path): # helper function allowing sanitycheck to break
-
-            slug_corrections={'/politicians/deborah-schulte':'/politicians/deb-schulte', # these are manual corrections for 2016 members with name irregularities
-                              '/politicians/dianne-watts':'/politicians/dianne-lynn-watts',
-                              '/politicians/james-gordon-carr':'/politicians/jim-carr',
-                              '/politicians/william-francis-morneau':'/politicians/bill-morneau',
-                              '/politicians/(bill)-casey':'/politicians/bill-casey',
-                              '/politicians/robert-morrissey':'/politicians/bobby-morrissey',
-                              '/politicians/robert-daniel-nault':'/politicians/bob-nault',
-                              '/politicians/pamela-goldsmith-jones':'/politicians/pam-goldsmith-jones',
-                              '/politicians/thomas-harvey':'/politicians/tj-harvey',
-                              '/politicians/navdeep-singh-bains':'/politicians/navdeep-bains',
-                              '/politicians/candice-bergen':'/politicians/candice-hoeppner',
-                              '/politicians/patricia-hajdu':'/politicians/patty-hajdu',
-                              '/politicians/gordon-brown':'/politicians/gord-brown',
-                              '/politicians/jenny-wai-ching-kwan':'/politicians/jenny-kwan',
-                              '/politicians/catherine-mary-mckenna':'/politicians/catherine-mckenna',
-                              '/politicians/harjit-singh-sajjan':'/politicians/harjit-s-sajjan',
-                              '/politicians/linda-francis-duncan':'/politicians/linda-duncan',
-                              '/politicians/brad-trost':'/politicians/bradley-trost',
-                              '/politicians/edward-fast':'/politicians/ed-fast',
-                              '/politicians/daniel-vandal':'/politicians/dan-vandal'}
             
             with open (os.path.join(path, file), 'rb') as xmlfile:
 
                 doc = etree.parse(xmlfile)
                 root =  doc.getroot()
 
-                # stop throwing out senators in case they were also members
+                # stop throwing out senators because they may have been in the house earlier
 
 ##                senator = False # throw out senators 
 ##
@@ -173,8 +131,6 @@ class Command(BaseCommand):
                 deceaseddate = None
                 op_slug = ""
 
-                date_flag = False
-
                 for child in root.findall('pm:member//pm:name//pm:first',root.nsmap):
                     firstname = self.stringify_children(child)
 
@@ -188,49 +144,15 @@ class Command(BaseCommand):
                     if firstname == "Dr": # doctor manual fix (just have to watch the output here, alas)
                         print("DOCTOR FIRSTNAME ERROR FIXME " + m)
 
-                    if len(m) == 36: # this is a file from me, not from kaspar, so it's a >=2016 member
-                        date_flag = True # setting this will speed up the basehansard query later to fix unattributed speeches of byelection members
-                        time.sleep(2)
-                        mpid = m
-                        firstname_strip = unidecode(firstname)
-                        if len(firstname_strip.split()) >= 2:
-                            if len(firstname_strip.split()[1].replace(".", ""))==1:
-                                firstname_strip = firstname_strip.split()[0]
-                        lastname_strip = unidecode(lastname)
-                        
-                        # gather personal website, email from openparliament here; also test the slug for quick identification and linking
-                        op_slug = "/politicians/"+firstname_strip.lower().replace("'", "").replace(" ", "-").replace(".", "")+"-"+lastname_strip.lower().replace("'", "").replace(" ", "-")
+                    time.sleep(2)
+                    mpid = m
+                    firstname_strip = unidecode(firstname)
+                    if len(firstname_strip.split()) >= 2:
+                        if len(firstname_strip.split()[1].replace(".", ""))==1:
+                            firstname_strip = firstname_strip.split()[0]
+                    lastname_strip = unidecode(lastname)
 
-                        # check if there's a problem in their slug and/or parlinfo name info; if so, correct it from op data
-
-                        corrected = False
-                        if op_slug in list(slug_corrections.keys()):
-                            new_slug = slug_corrections[op_slug]
-                            op_slug = new_slug
-                            corrected = True
-                        
-                        try:
-                            polparse = self.fetchPolParse(op_slug)
-                            try:
-                                website = polparse.get("links")[1].get("url")
-                            except:
-                                website = polparse.get("links")[0].get("url")
-                            emailaddress = polparse.get("email")
-                            if corrected is True:
-                                firstname = polparse.get("name").split(" ")[0]
-                        except:
-                            print (op_slug + " failed url lookup.")
-                        
-                    else: # this is a file from kaspar
-                        for link in root.findall('pm:member//pm:links//pm:link',root.nsmap):
-                            if u"Parliamentarian.aspx" in link.text:
-                                url = link.text
-                                mpid = url.split("/")[-1]
-                                mpid = mpid.split('&')[0]
-                                mpid = mpid.split('=')[1]
-                            elif u"en.wikipedia" in link.text:
-                                website = link.text
-
+                    website = "http://www.lop.parl.gc.ca/ParlInfo/Files/Parliamentarian.aspx?Item="+mpid+"&Language=E"
 
                 for child in root.findall('pm:member//pm:personal//pm:born',root.nsmap):
                     try:
@@ -266,7 +188,7 @@ class Command(BaseCommand):
 
                 speakerurl = ("http://www.parl.gc.ca/parlinfo/Files/Parliamentarian.aspx?Item="+mpid+"&Language=E&Section=ALL")
 
-                b, created = member.objects.get_or_create(pid = mpid, defaults = {'firstname':firstname,
+                b, created = member.objects.update_or_create(pid = mpid, defaults = {'firstname':firstname,
                                                                                      'lastname':lastname.upper(),
                                                                                      'fulltitle':fulltitle,
                                                                                      'gender':gender,
@@ -278,33 +200,13 @@ class Command(BaseCommand):
                                                                                      'op_slug':op_slug
                                                                                      })
                 if created is False:
-                    # duplicate record; we used to keep track of these, but now that the old files are all corrected, this should operate like missing_member_import
-                    # and simply state when new records are created only
-                    
-##                  with open('duplicates.txt','a') as file:
-##                      file.write("%s\n" % m)
-                
-                    pass
-                
+                    pass  # most in this case are going to already exist; we'll keep track of the created members instead
+
                 else:
                     print("Successfully created file for missing person: "+mpid)
-
-                ###### Next, go through basehansard for unassociated speeches that should be linked to this person
-                ###### (ie. due to byelection, hansards have been pulled with their assigned pid = '00000000-0000-0000-0000-000000000000'
-
-                # we could also correct their opids here
-
-                corrections_date = '1901-01-01'
-                
-                if date_flag==True:
-                    corrections_date = '2016-01-01'
-
-                bh_correction_qs = basehansard.objects.filter(speechdate__gte=corrections_date).filter(pid__exact='00000000-0000-0000-0000-000000000000').filter(speakername = (firstname + " " + lastname))
-                for corr in bh_correction_qs:
-                    corr.pid = mpid
-                    corr.save()
-
-                ###### now create constituency records for this person
+                    
+                    
+                # now create constituency records for this person
 
                 datesDict = {}
 
@@ -351,31 +253,33 @@ class Command(BaseCommand):
                                 datesDict[sd]=[RidingInstance(sd,ed,r,p)]
 
                     except KeyError:
+                        pass
 
                         # this is a position, ie. ministerial, so create a position object
+                        ##################### commenting this out for now because there are issues with Prime Ministers, and it will be redone on its own in a future pass!
 
-                        epd = None
-                        spd = None
-                        pnm = ''
-
-                        for period in child:
-
-                            try:
-                                spd = datetime.datetime.strptime(period.attrib['{http://www.politicalmashup.nl}from'],'%Y-%m-%d')
-                                if "present" in (period.attrib['{http://www.politicalmashup.nl}till']):
-                                    epd = None
-                                else:
-                                    epd = datetime.datetime.strptime(period.attrib['{http://www.politicalmashup.nl}till'],'%Y-%m-%d')
-                            except KeyError:
-                                try:
-                                    pnm = period.text
-                                except KeyError:
-                                    pass
-                                
-                        psn, created = position.objects.get_or_create(pid = member.objects.get(pid=mpid),
-                                                      positionname = pnm,
-                                                      startdate = spd,
-                                                      enddate = epd)
+##                        epd = None
+##                        spd = None
+##                        pnm = ''
+##
+##                        for period in child:
+##
+##                            try:
+##                                spd = datetime.datetime.strptime(period.attrib['{http://www.politicalmashup.nl}from'],'%Y-%m-%d')
+##                                if "present" in (period.attrib['{http://www.politicalmashup.nl}till']):
+##                                    epd = None
+##                                else:
+##                                    epd = datetime.datetime.strptime(period.attrib['{http://www.politicalmashup.nl}till'],'%Y-%m-%d')
+##                            except KeyError:
+##                                try:
+##                                    pnm = period.text
+##                                except KeyError:
+##                                    pass
+##                                
+##                        psn, created = position.objects.get_or_create(pid = member.objects.get(pid=mpid),
+##                                                      positionname = pnm,
+##                                                      startdate = spd,
+##                                                      enddate = epd)
 
                 try:
                     for child in root.findall('pm:member//openpx:party-affiliation',root.nsmap):
@@ -430,7 +334,7 @@ class Command(BaseCommand):
                         else:
                             raise NameError('Unanticipated ending date error...')
 
-                        c, created = constituency.objects.get_or_create(riding = current_riding.get_riding(),
+                        c, created = constituency.objects.update_or_create(riding = current_riding.get_riding(),
                                                         province = current_riding.get_province(),
                                                         pid = mpid, # this is still kept from the above politician's processing
                                                         partyid = current_party.get_partyobj(m),
@@ -445,7 +349,7 @@ class Command(BaseCommand):
                             current_party = datesDict[key_date][0]
 
                             if current_riding is not None:
-                                c, created = constituency.objects.get_or_create(riding = current_riding.get_riding(),
+                                c, created = constituency.objects.update_or_create(riding = current_riding.get_riding(),
                                                     province = current_riding.get_province(),
                                                     pid = mpid, # this is still kept from the above politician's processing
                                                     partyid = current_party.get_partyobj(m),
@@ -457,7 +361,7 @@ class Command(BaseCommand):
                             current_riding=datesDict[key_date][0]
                             
                             if current_party is not None:
-                                c, created = constituency.objects.get_or_create(riding = current_riding.get_riding(),
+                                c, created = constituency.objects.update_or_create(riding = current_riding.get_riding(),
                                                         province = current_riding.get_province(),
                                                         pid = mpid,
                                                         partyid = current_party.get_partyobj(m),
@@ -468,12 +372,12 @@ class Command(BaseCommand):
                                 
                         else:
                             raise NameError('Unanticipated type of date event error...')
-                            
+       
 
-
-        path = os.path.join(os.getcwd(), "canada", datadir)
+        path = os.path.join(BASE_DIR, "canada", datadir)
         lst = os.listdir(path)
         lst.sort()
         for file in lst:
+            print(file)
             fileLoop(file,path)
 

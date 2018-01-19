@@ -25,13 +25,19 @@ def record(request, memberpid, pageno):
     except member.DoesNotExist:
         raise Http404("Member does not exist.")
     qs = basehansard.objects.filter(pid=memberpid).order_by('-speechdate').all()
-    paginator = DiggPaginator(qs, 20, body=5, tail=2, padding=2)
+    paginator = DiggPaginator(qs, 5, body=5, tail=2, padding=2)
     thedate = datetime.datetime.now().date()
     baseurl = "/members/record/"+memberpid+'/'
     ridings = constituency.objects.filter(pid=memberpid).order_by('startdate').distinct() # this handles duplicates (for now) which need to be culled properly
     ridings_reverse = constituency.objects.filter(pid=memberpid).order_by('-startdate').all()
-    lastparty = ridings_reverse[0].partyid
-    lastconstituency = ridings_reverse[0]
+    try:
+        lastparty = ridings_reverse[0].partyid
+    except:
+        lastparty = party.objects.get(partyid=31)
+    try:
+        lastconstituency = ridings_reverse[0]
+    except:
+        lastconstituency = None
     return render_to_response('members/member.html', 
               {'member':q, 'latest':qs, 'ridings':ridings, 'lastparty':lastparty, 'baseurl':baseurl,'paginator': paginator, 'page':paginator.page(pageno), 'pageno':pageno, 'lastconstituency':lastconstituency})
 

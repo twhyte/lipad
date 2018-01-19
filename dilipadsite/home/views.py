@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from andablog.models import Entry
 
 def index(request):
-    b = Entry.objects.last()
+    b = Entry.objects.filter(is_published=True).last()
     return render(request, 'home/index.html',
                   {'blog': b})
 

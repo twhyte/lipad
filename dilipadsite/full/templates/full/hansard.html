@@ -4,7 +4,9 @@
 
 {% load widget_tweaks %}
 
-{% block title %}Lipad - {{ hansard.1.speechdate|date:"F j, Y" }} - Browse the Canadian House of Commons{% endblock title %}
+{% load full_extras %}
+
+{% block title %}Lipad - {{ hansard.speechdate|date:"F j, Y" }} - Browse the Canadian House of Commons{% endblock title %}
 
 {% block base_body %}
 
@@ -58,13 +60,13 @@
            <div class="uk-width-large-1-2">
             <ul class="uk-breadcrumb">
                 <li><a href="/full/">Timeline</a></li>
-                <li><a href='/full/{{ hansard.1.speechdate|date:"Y" }}/'>{{ hansard.1.speechdate|date:"Y" }}</a></li>
-                <li><a href='/full/{{ hansard.1.speechdate|date:"Y" }}/{{ hansard.1.speechdate|date:"m" }}/'>{{ hansard.1.speechdate|date:"F" }}</a></li>
-                <li class="uk-active"><span>{{ hansard.1.speechdate|date:"l, F j" }}</span></li>
+                <li><a href='/full/{{ hansard.speechdate|date:"Y" }}/'>{{ hansard.speechdate|date:"Y" }}</a></li>
+                <li><a href='/full/{{ hansard.speechdate|date:"Y" }}/{{ hansard.speechdate|date:"m" }}/'>{{ hansard.speechdate|date:"F" }}</a></li>
+                <li class="uk-active"><span>{{ hansard.speechdate|date:"l, F j" }}</span></li>
             </ul>
             </div>
             <div class="uk-width-large-1-2">
-            <a href='/full/{{ hansard.1.speechdate|date:"Y" }}/{{ hansard.1.speechdate|date:"m" }}/{{ hansard.1.speechdate|date:"d" }}/exportcsv/' class="uk-button uk-float-right"><i class="uk-icon-download"></i> Export to CSV</a>
+            <a href='/full/{{ hansard.speechdate|date:"Y" }}/{{ hansard.speechdate|date:"m" }}/{{ hansard.speechdate|date:"d" }}/exportcsv/' class="uk-button uk-float-right"><i class="uk-icon-download"></i> Export to CSV</a>
                         
             </div>
             
@@ -74,7 +76,7 @@
               
                <div class="uk-container uk-slidenav-position">
                  <div class = "uk-grid">
-                  <h1 class="uk-heading-large uk-align-center">{{ hansard.1.speechdate|date:"F j, Y" }}</h1>
+                  <h1 class="uk-heading-large uk-align-center">{{ hansard.speechdate|date:"F j, Y" }}</h1>
                    </div>
                    
                        <a href="{{ previous }}" class="uk-slidenav uk-slidenav-previous" style="display: inherit;"></a>
@@ -197,7 +199,7 @@
                                  <p>{{ result.speakeroldname }}</p>
                                      {% endif %}
             
-                                <p><i class="uk-icon-quote-left uk-icon-medium uk-align-left"></i><p>{{ result.speechtext|linebreaks }}</p>
+                                <p><i class="uk-icon-quote-left uk-icon-medium uk-align-left"></i><p>{% autoescape off %}{{ result.speechtext|paragraphs }}{% endautoescape %}</p>
                                 </div>
 
                                 <div class="uk-float-left uk-margin-top uk-h5">
@@ -207,6 +209,9 @@
                                     {% endif %}
                                     {% if result.subtopic %}
                                     <br><strong>Subtopic:&nbsp;&nbsp;</strong> {{ result.subtopic }}
+                                    {% endif %}
+                                    {% if result.subsubtopic %}
+                                    <br><strong>Sub-subtopic:&nbsp;&nbsp;</strong> {{ result.subsubtopic }}
                                     {% endif %}
                                     </div>
 
@@ -260,7 +265,7 @@
               
                <div class="uk-container uk-slidenav-position">
                  <div class = "uk-grid">
-                  <h1 class="uk-align-center uk-heading-small uk-margin-top">{{ hansard.1.speechdate|date:"F j, Y" }}</h1>
+                  <h1 class="uk-align-center uk-heading-small uk-margin-top">{{ hansard.speechdate|date:"F j, Y" }}</h1>
                    </div>
                    
                        <a href="{{ previous }}" class="uk-slidenav uk-slidenav-previous" style="display: inherit;"></a>

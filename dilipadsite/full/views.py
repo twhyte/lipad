@@ -114,16 +114,23 @@ def hansard_view(request, year, month, day, pageno):
     d=int(day)
     dateobj = datetime.date(y,m,d)
     
-    qs = basehansard.objects.raw("select * from dilipadsite_basehansard where speechdate = %s order by basepk", [dateobj])
+    # qs = basehansard.objects.raw("select * from dilipadsite_basehansard where speechdate = %s order by basepk", [dateobj])
 
-    def items_count():
-        cursor = connection.cursor()
-        cursor.execute("select count(*) from dilipadsite_basehansard where speechdate = %s", [dateobj])
-        row = cursor.fetchone()
-        return row[0]
+    qs = basehansard.objects.filter(speechdate=dateobj).order_by('basepk')
+    # need to add select_related to speed up rendering
+    # but first basehansard needs foreignkeys to be added!
+    
+    qscount = len(qs) # use len() now so there's a cached verson for paginator
+    
+## this is horrible
+##    def items_count():
+##        cursor = connection.cursor()
+##        cursor.execute("select count(*) from dilipadsite_basehansard where speechdate = %s", [dateobj])
+##        row = cursor.fetchone()
+##        return row[0]
     
     paginator = DiggPaginator(qs, 20, body=5, tail=2, padding=2)
-    paginator._count = items_count()
+    paginator._count = qscount # items_count()
 
     datenavobject = datenav.objects.get(hansarddate=dateobj)
     
@@ -133,7 +140,7 @@ def hansard_view(request, year, month, day, pageno):
     if len(storage) == 0:
 
         try:
-            context = {'year':year, 'baseurl':baseurl, 'month':month, 'day':day, 'hansard':qs, 'next':datenavobject.get_next_day_link(), 'paginator': paginator, 'page':paginator.page(pageno), 'pageno':pageno, 'previous':datenavobject.get_previous_day_link()}
+            context = {'year':year, 'baseurl':baseurl, 'month':month, 'day':day, 'hansard':qs[1], 'next':datenavobject.get_next_day_link(), 'paginator': paginator, 'page':paginator.page(pageno), 'pageno':pageno, 'previous':datenavobject.get_previous_day_link()}
         except InvalidPage:
             raise Http404("Page does not exist")
 
@@ -143,7 +150,7 @@ def hansard_view(request, year, month, day, pageno):
             refer_pk = m.message
             break
         try:
-            context = {'year':year, 'month':month, 'baseurl':baseurl, 'day':day, 'hansard':qs, 'next':datenavobject.get_next_day_link(), 'paginator': paginator, 'page':paginator.page(pageno), 'pageno':pageno, 'previous':datenavobject.get_previous_day_link(), 'refer_pk':refer_pk}
+            context = {'year':year, 'month':month, 'baseurl':baseurl, 'day':day, 'hansard':qs[1], 'next':datenavobject.get_next_day_link(), 'paginator': paginator, 'page':paginator.page(pageno), 'pageno':pageno, 'previous':datenavobject.get_previous_day_link(), 'refer_pk':refer_pk}
         except InvalidPage:
             raise Http404("Page does not exist")
         

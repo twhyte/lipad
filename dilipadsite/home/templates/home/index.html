@@ -28,7 +28,7 @@
 	<section id="home" class="splash-page splash">
 		<div class="wrapper sml vert">
 			<div class="column-12 black-box scroll-opacity para-med">
-				<p class="xl no-margin animate-from-bottom white"><b>We've digitized Canada's Parliament.</b></p>
+				<p class="xl no-margin animate-from-bottom white"><b>We're digitizing Canada's Parliament.</b></p>
                 <p class="animate-from-bottom white">Search the Canadian Hansard from 1901 to today.</p>
                     <form id = "search" action="/search/" method="get">
                         <input id="searchfield" name="q" type="text">
@@ -52,6 +52,7 @@
 		<div class="wrapper sml">
 			<div class="column-12">
 				<p class="xl center no-margin">Welcome to <b>LiPaD:</b></p><p class = "lrg center no-margin">The Linked Parliamentary Data Project</p>
+				<center><img class = "extramargin" src='{% static "home/images/uoft.png" %}'alt="University of Toronto Logo" style="width:200px;"></center>
 			</div>
 		</div>
 	</section>
@@ -62,13 +63,13 @@
 </div>
            <div class="wrapper">
             <div class="column-12"><div class="info-block"><div class="details">
-                <p class = "desc">The transcript of Parliamentary Debates (“Hansard”) is a 150-year running record of Canadian political history.  This richness presents political historians with a needle-in-a-haystack problem of an enormous magnitude.  At a rate of a novel’s worth of reading each day, it would take <em>27 years</em> to read the 680 million words of Hansard.  It would take a further 6 years to read what was added in the interim.</p><br></div></div>
+                <p class = "desc">The transcript of Parliamentary Debates (“Hansard”) is a 150-year running record of Canadian political history. The richness of this record presents a needle-in-a-haystack problem of enormous magnitude. At a rate of a novel’s worth of reading each day, it would take 66 years to read the transcripts of the House and the Senate. It would take a further 28 years to read what was added in the interim.</p><br></div></div>
 				
                 <div class="info-block"><div class="details"><p class = "desc">In 2013, a group of political scientists, computer scientists, and historians teamed up at the University of Toronto to solve this problem.  With support from the SSHRC, the NSERC, the Digging into Data initiative, the Library of Parliament, Library and Archives Canada, <a href="http://www.canadiana.ca/en/home">Canadiana.org</a>, and Michael Mulley at <a href="https://openparliament.ca/">openparliament.ca</a>, a key output of this collaboration is the first machine-readable and fully searchable historical Hansard.  We have linked to these data to various biographical properties of parliamentarians, including their party and gender.  This corpus underpins the search interface of this website.</p><br></div></div>
 
 <div class="info-block"><div class="details"><p class = "desc">We are continuously expanding this corpus and features on this website.  We are adding the Debates of the Senate and the transcripts of parliamentary committees.  We are also integrating more and more information about parliamentarians, including information about the demographic profiles and election outcomes in their constituencies.  To request data or for information about how to get involved in this project, please <a href="/contact/">contact us.</a>
     </p><br></div></div>
-                <div class="info-block"><div class="details"><p class = "desc">A full description of our project in a published article for citation purposes is forthcoming.</p></div></div>
+                <div class="info-block"><div class="details"><p class = "desc">For citation purposes, a full description of our project is available in the following article:</p><p>Beelen, K., Thijm, T. A., Cochrane, C., Halvemaan, K., Hirst, G., Kimmins, M., Lijbrink, S., Marx, M., Naderi, N., Rheault, L., Polyanovsky, R., and Whyte, T. (2017). "Digitization of the Canadian Parliamentary Debates." <em>Canadian Journal of Political Science</em>, 50(3), 849–864. https://doi.org/10.1017/S0008423916001165.</p></div></div>
                 
                 </div>
             
@@ -145,8 +146,8 @@ Although this project is much improved from the support of our funders and our c
                 
 					<h5 class="subtitle extramargin">{{ blog.published_timestamp|date:"F j, Y" }} | {{ blog.title }}</h5>
                     
-					<div class="details sfont">{{ blog.content|truncatewords_html:250 }}</div><br>
-					<a href="{{ blog.get_absolute_url }}" class="uk-button uk-button-primary" style="color:white;">Read More</a>
+					<div class="details sfont">{{ blog.content|truncatewords_html:150 }}</div><br>
+					<a href="{{ blog.get_absolute_url }}">Read More</a>
 				</div>
 			</div>
 		</div>

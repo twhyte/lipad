@@ -8,6 +8,9 @@ import csv
 import io
 from lxml import etree
 
+####################
+# Note that this import has not been updated to also parse subsubtopics
+
 class WeirdXMLError(Exception):
     def __init__(self, value):
         self.value = value

@@ -19,6 +19,8 @@ class WeirdXMLError(Exception):
 class Command(BaseCommand):
     help = 'populates a model datenav containing a date list of all hansarddays, creates the full dictionary, and pickles'
 
+    # this needs to be rewritten for simple updates as well, ie. daily update. Way too inefficient.
+
     def handle(self, *args, **options):
 
         

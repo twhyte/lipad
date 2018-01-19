@@ -24,13 +24,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-with open('key.txt') as f:
+with open('/etc/secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = ['localhost']
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Application definition
 
@@ -45,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'dilipadsite',
+    'downtime',
     'django_contactme',
     'home',
     'static_sitemaps',
@@ -65,6 +70,7 @@ INSTALLED_APPS = (
 
 
 MIDDLEWARE_CLASSES = (
+    'downtime.middleware.DowntimeMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -99,7 +105,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 
             ],
-
         },
     },
 ]
@@ -108,11 +113,11 @@ TEMPLATES = [
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'server-1:11211',
+        'LOCATION': '127.0.0.1:11211',
     },
     'cache_machine': {
         'BACKEND': 'diskcache.DjangoCache',
-        'LOCATION': '/django_cache',
+        'LOCATION': '/home/lipad/django_cache',
         'SHARDS': 4,
         'DATABASE_TIMEOUT': 10.0,
         'OPTIONS': {
@@ -123,7 +128,7 @@ CACHES = {
 }
 
 CACHE_MIDDLEWARE_ALIAS = "default"
-CACHE_MIDDLEWARE_SECONDS = 2500
+CACHE_MIDDLEWARE_SECONDS = 300
 
 WSGI_APPLICATION = 'dilipadsite.wsgi.application'
 
@@ -134,7 +139,12 @@ WSGI_APPLICATION = 'dilipadsite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dilipadsite',
+        'NAME': 'lipad_dilipadsite',
+        'USER': 'user',
+        'PASSWORD': 'pw',
+        'HOST': '0.0.0.0',
+        'PORT': '5432',
+        'CONN_MAX_AGE':300,
     }
 }
 
@@ -162,25 +172,29 @@ MARKITUP_SET = 'markitup/sets/markdown'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-STATIC_ROOT = "/static/"
-MEDIA_ROOT = "/media/"
+STATIC_ROOT = "/home/lipad/static/"
+MEDIA_ROOT = "/home/lipad/media/"
 
 # App Settings
 
-INTERNAL_IPS = ('127.0.0.1','0.0.0.0')
+INTERNAL_IPS = ('0.0.0.0')
 
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://127.0.0.1:8080/solr'
+        'URL': 'http://0.0.0.0:8080/solr'
     },
 }
 
-GRAPPELLI_ADMIN_TITLE = 'Admin'
+GRAPPELLI_ADMIN_TITLE = 'Lipad Admin'
 ENDLESS_PAGINATION_DEFAULT_CALLABLE_ARROWS = True
 ENDLESS_PAGINATION_DEFAULT_CALLABLE_EXTREMES = 2
 ENDLESS_PAGINATION_PER_PAGE = 15
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+DOWNTIME_EXEMPT_PATHS = (
+    '/admin',
+)
 
 # STATICSITEMAPS_ROOT_SITEMAP = 'dilipadsite.sitemaps.sitemaps'
 
@@ -189,21 +203,23 @@ SITE_ID = 5
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'admin@gmail.com'
-DEFAULT_FROM_EMAIL = 'admin@gmail.com'
-SERVER_EMAIL ='admin@gmail.com'
+EMAIL_HOST_USER = 'user@gmail.com'
+DEFAULT_FROM_EMAIL = 'user@gmail.com'
+SERVER_EMAIL ='user@gmail.com'
 
-with open('password2.txt') as f:
+with open('/etc/email_password.txt') as f:
     emailpw = f.read().strip()
 
 EMAIL_HOST_PASSWORD = emailpw
 EMAIL_PORT = 587
 
-ADMINS = (('Admin', 'admin@gmail.com'),)
+ADMINS = (('Lipad Admin', 'user@gmail.com'),)
 
-CONTACTME_NOTIFY_TO = "Admin <admin@gmail.com>"
+CONTACTME_NOTIFY_TO = "Lipad Admin <user@gmail.com>>"
 CONTACTME_SALT = ""
 CONTACTME_MSG_MAX_LEN = 3000
+
+STATICSITEMAPS_ROOT_SITEMAP = 'dilipadsite.urls.sitemaps'
 
 LOGGING = {
     'version': 1,
@@ -215,15 +231,15 @@ LOGGING = {
     },
     'handlers': {
         'default': {
-            'level':'ERROR',
+            'level':'WARNING',
             'class':'logging.FileHandler',
-            'filename': 'django.log',
+            'filename': '/var/log/lipad/lipad-django.log',
             'formatter':'standard',
         },  
         'request_handler': {
-                'level':'ERROR',
+                'level':'WARNING',
                 'class':'logging.FileHandler',
-                'filename': 'django.log',
+                'filename': '/var/log/lipad/lipad-django.log',
                 'formatter':'standard',
         },
     },
@@ -231,14 +247,13 @@ LOGGING = {
 
         '': {
             'handlers': ['default'],
-            'level': 'ERROR',
+            'level': 'WARNING',
             'propagate': True
         },
         'django.request': {
             'handlers': ['request_handler'],
-            'level': 'ERROR',
+            'level': 'WARNING',
             'propagate': False
         },
     }
 }
-

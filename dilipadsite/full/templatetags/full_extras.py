@@ -1,5 +1,8 @@
 from django import template
 import calendar
+from django.template import Library, Node
+from django.template.defaultfilters import stringfilter
+import re
 
 register = template.Library()
 
@@ -17,3 +20,14 @@ def url_replace(request, field, value):
     dict_[field] = value
 
     return dict_.urlencode()
+
+@register.filter
+@stringfilter
+def paragraphs(value):
+    """
+    Turns paragraphs delineated with newline characters into
+    paragraphs wrapped in <p> and </p> HTML tags.
+    """
+    paras = re.split(r'[\r\n]+', value)
+    paras = ['<p>%s</p>' % p.strip() for p in paras]
+    return '\n'.join(paras)

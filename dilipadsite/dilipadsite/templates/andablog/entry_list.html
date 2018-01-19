@@ -20,6 +20,8 @@
                 <div class="uk-width-medium-3-4">
                     
                     {% for entry in entries %}
+                    
+                    {% if entry.is_published = True %}
 
                     <article class="uk-article">
 
@@ -36,6 +38,8 @@
                         <a class="uk-button uk-button-primary" href="{{ entry.get_absolute_url }}">Continue Reading</a>
 
                     </article>
+                    
+                    {% endif %}
                     
                     {% endfor %}
                     

@@ -182,7 +182,7 @@ class member(models.Model):
         return (self.firstname + " " +self.lastname)
 
     def get_member_url(self):
-        return 
+        return ("http://www.parl.gc.ca/parlinfo/Files/Parliamentarian.aspx?Item="+self.pid+"&Language=E&Section=ALL")
 
     def get_static_img(self):
         '''Returns staticfile location of person's hosted picture
@@ -215,6 +215,7 @@ class constituency(models.Model):
     partyid = models.ForeignKey('party')
     startdate = models.DateField(blank=True, null=True)
     enddate = models.DateField(blank=True, null=True)
+    pid_fk = models.ForeignKey('member', default = '00000000-0000-0000-0000-000000000000')
 
     def get_riding(self):
         return self.riding
@@ -263,11 +264,14 @@ class basehansard(CachingMixin, models.Model):
     speakerposition = models.TextField(blank=True, null=True) # mostly for error checking in retro documents and error-checking
     maintopic = models.TextField(blank=True, null=True, db_index=True)
     subtopic = models.TextField(blank=True, null=True, db_index=True)
+    subsubtopic = models.TextField(blank=True, null=True, db_index=True)
     speechtext = models.TextField(blank=True, null=True)
     speakerparty = models.TextField(blank=True, null=True, db_index=True)
     speakerriding = models.TextField(blank=True, null=True, db_index=True)
     speakername = models.TextField(blank=True, null=True, db_index=True)
     speakerurl = models.TextField(blank=True, null=True)
+    # party_fk = models.ForeignKey('party', default = '31') # transition field for speakerparty
+    # pid_fk = models.ForeignKey('member', default = '00000000-0000-0000-0000-000000000000') # transition field for member
 
     objects = CachingManager()
 

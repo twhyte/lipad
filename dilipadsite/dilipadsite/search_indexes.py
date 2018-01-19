@@ -6,7 +6,7 @@ class BaseHansardIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     hid = indexes.CharField(model_attr='hid', indexed=False)
     speechtext = indexes.CharField(model_attr='speechtext')
-    opid = indexes.CharField(model_attr='opid', indexed=False)
+    opid = indexes.CharField(model_attr='opid', indexed=False, null=True)
     pid = indexes.CharField(model_attr='pid', indexed=False, null=True)
     speechdate = indexes.DateField(model_attr='speechdate')
     speakername = indexes.CharField(model_attr='speakername')

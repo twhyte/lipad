@@ -50,12 +50,12 @@ class DateRangeSearchForm(TextSearchForm):
 
     thedate = datetime.datetime.now().date()
 
-    sd = forms.DateField(widget=SelectDateWidget(years=list(range(1900,2017)), months={
+    sd = forms.DateField(widget=SelectDateWidget(years=list(range(1900,thedate.year+1)), months={
     1:('Jan'), 2:('Feb'), 3:('Mar'), 4:('Apr'),
     5:('May'), 6:('Jun'), 7:('Jul'), 8:('Aug'),
     9:('Sep'), 10:('Oct'), 11:('Nov'), 12:('Dec')}),required=False, input_formats=['%Y-%m-%d'], error_messages = errorsdict, initial=datetime.date(1901,01,01))
     
-    ed = forms.DateField(widget=SelectDateWidget(years=list(range(1900,2017)), months={
+    ed = forms.DateField(widget=SelectDateWidget(years=list(range(1900,thedate.year+1)), months={
     1:('Jan'), 2:('Feb'), 3:('Mar'), 4:('Apr'),
     5:('May'), 6:('Jun'), 7:('Jul'), 8:('Aug'),
     9:('Sep'), 10:('Oct'), 11:('Nov'), 12:('Dec')}),required=False, input_formats=['%Y-%m-%d'], error_messages = errorsdict, initial=thedate)

@@ -10,6 +10,8 @@
 
 {% load members_extras %}
 
+{% load full_extras %}
+
 {% block content %}
     
     <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom" id="main">
@@ -93,8 +95,10 @@
                 <dl class="uk-description-list-line">
                     <dt>Party</dt>
                     <dd><a href="{{ lastparty.get_party_url }}">{{ lastparty.name }}</a></dd>
+                    {% if lastconstituency %}
                     <dt>Constituency</dt>
                     <dd>{{ lastconstituency.riding }} ({{ lastconstituency.province }})</dd>
+                    {% endif %}
                     {% if member.birthdate %}
                     <dt>Birth Date</dt>
                     <dd>{{ member.birthdate|date:"F j, Y" }}</dd>
@@ -105,6 +109,8 @@
                     {% endif %}
                     <dt>Website</dt>
                     <dd><a href="{{ member.get_personal_site }}">{{ member.get_personal_site }}</a></dd>
+                    <dt>PARLINFO</dt>
+                    <dd><a href="{{ member.get_member_url }}">{{ member.get_member_url }}</a></dd>
                     {% if member.emailaddress %}
                     <dt>Email Address</dt>
                     <dd><a href="mailto:{{ member.emailaddress }}">{{ member.emailaddress }}</a></dd>
@@ -132,6 +138,14 @@
                        {% for riding in ridings %}
                     <dt>{{ riding.startdate|date:"F j, Y" }} - {{ riding.enddate|date:"F j, Y" }}</dt>
                     <dd><div class="uk-badge" style ='background: {{ riding.partyid.get_party_colour }}; color:{{ riding.partyid.get_party_textcolour }};'>{{ riding.partyid.get_party_abbrev }}</div>&nbsp;&nbsp;{{ riding.riding }} ({{ riding.province }})
+                    
+                    {% if riding.get_position %}
+                        <ul>
+                        {% for position in riding.get_position %}
+                        <li>{{ position.positionname }} <em>({{ position.startdate|date:"F j, Y" }} - {{ position.enddate|date:"F j, Y" }})</em></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     
                      </dd>
                       
@@ -181,7 +195,7 @@
             
                                 <p><i class="uk-icon-quote-left uk-icon-medium uk-align-left"></i>
                                 
-                                    {{ result.speechtext }}
+                                    {% autoescape off %}{{ result.speechtext|paragraphs }}{% endautoescape %}
                                 
                                 </div>
 
